@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: Profiling
+Version: 0.1.0
+Summary: Framework for profiling Python and PyTorch
+Home-page: https://github.com/NazarLenyshyn6/PythonPytorchProfiling/tree/main
+Author: Nazar Lenyshyn
+Author-email: nazarleny01@gmail.com
+Requires-Python: >=3.7
