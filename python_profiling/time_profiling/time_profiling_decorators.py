@@ -104,7 +104,6 @@ class TimeItProfilerDecorator(BaseModel):
                                             repeat=self.repeat)
         
         self.observer = ProfilingObserver(storages=self.storages)
-        print(self.observer.storages)
     
     
     def __call__(self, func: Callable) -> Callable:

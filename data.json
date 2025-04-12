@@ -1,0 +1,261 @@
+{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7f7a08f312d0>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "1.9073486328125e-06",
+    "func_exception": "None"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7ff500ed3880>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "2.1457672119140625e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7ff500fec6a0>",
+    "profiled_func": "<function hello at 0x7ff500ed39a0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7ff5010091b0>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "1.9073486328125e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7ff500fedd50>",
+    "profiled_func": "<function hello at 0x7ff501008040>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7ff501009870>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "2.86102294921875e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7ff500fee1a0>",
+    "profiled_func": "<function hello at 0x7ff501009b40>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7ff50100b250>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "1.9073486328125e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7ff500fefbe0>",
+    "profiled_func": "<function hello at 0x7ff50100b2e0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7fdd3aab0f70>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "1.9073486328125e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7fdd3aab7460>",
+    "profiled_func": "<function hello at 0x7fdd3aab1360>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7fdd3b971f30>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "2.1457672119140625e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7fdd3afa8e20>",
+    "profiled_func": "<function hello at 0x7fdd3b970820>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7feef4aa4d30>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "1.9073486328125e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7feef4aaa6e0>",
+    "profiled_func": "<function hello at 0x7feef4aa52d0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7fe3111a8ee0>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "2.1457672119140625e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7fe3111aef20>",
+    "profiled_func": "<function hello at 0x7fe3111a92d0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7feb90aacee0>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "1.1920928955078125e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7feb909a2f80>",
+    "profiled_func": "<function hello at 0x7feb90aad1b0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7feb91796710>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "9.5367431640625e-07",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7feb909a3b50>",
+    "profiled_func": "<function hello at 0x7feb917969e0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7fa55a1acee0>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "1.6689300537109375e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7fa55a1b0ca0>",
+    "profiled_func": "<function hello at 0x7fa55a1ad2d0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7fe2029a4ee0>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "2.1457672119140625e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7fe2029b7490>",
+    "profiled_func": "<function hello at 0x7fe2029a51b0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7f7b22234ee0>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "2.1457672119140625e-06",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7f7b2223eb90>",
+    "profiled_func": "<function hello at 0x7f7b21c21cf0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}{
+    "profiler": "TimeProfiler(profiling_timer=<built-in function time>)",
+    "profiled_func": "<function hello at 0x7f9d282a0ee0>",
+    "func_args": "None",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "Hello my name is bob",
+    "func_execution_time": "7.152557373046875e-07",
+    "func_exception": "None"
+}{
+    "profiler": "<timeit.Timer object at 0x7f9d282ae710>",
+    "profiled_func": "<function hello at 0x7f9d282a12d0>",
+    "func_kwargs": "{'name': 'bob'}",
+    "func_result": "None",
+    "repeats": "10",
+    "min_func_execution_time": "-1",
+    "avg_func_execution_time": "-1",
+    "max_func_execution_time": "-1",
+    "func_exception": "division by zero"
+}

@@ -1,0 +1,9 @@
+avg_func_execution_time: '-1'
+func_exception: division by zero
+func_kwargs: '{''name'': ''bob''}'
+func_result: None
+max_func_execution_time: '-1'
+min_func_execution_time: '-1'
+profiled_func: <function hello at 0x7f9d282a12d0>
+profiler: <timeit.Timer object at 0x7f9d282ae710>
+repeats: '10'

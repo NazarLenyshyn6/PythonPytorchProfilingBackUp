@@ -4,6 +4,7 @@ from python_profiling.enums import SerializerStrategy
 from Internals.checks import ValidateType
 from Internals.execution_guards import serialization_handler
 
+
 class SerializerI(ABC):
     @classmethod
     @abstractmethod
@@ -42,7 +43,7 @@ class SerializationHandler:
                              SerializerStrategy.YAML: YAMLSerializer}  
     
     @classmethod
-    @ValidateType([('serializer', SerializerI), ('serializer_name', SerializerStrategy)])
+    @ValidateType([('serializer', SerializerI), ('serializer_name', SerializerStrategy)]) # probably will be removedd
     def _add_serializer(cls, serializer: SerializerI, serializer_name: SerializerStrategy):
         cls._avaliable_serializers[serializer_name] = serializer
         print(f'{serializer} has been added as {serializer_name}')
@@ -61,7 +62,7 @@ class SerializationHandler:
         
         
     @classmethod
-    @ValidateType(('serializer_strategy', SerializerStrategy))
+    @ValidateType(('serializer_strategy', SerializerStrategy)) # probably will be removed
     def dump(cls, 
              data: dict, 
              file_path: str,
