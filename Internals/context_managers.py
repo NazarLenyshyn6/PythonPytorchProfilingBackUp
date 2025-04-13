@@ -8,7 +8,7 @@ class BaseManager:
     @staticmethod
     def handle_exception(self, exc_type, exc_value):
         self.exception = True if exc_type else False
-        self.func_exception = exc_value if exc_type else None
+        self.func_exception = exc_type if exc_type else None
             
 
 # Implementation of context manager for Time Profiler

@@ -36,7 +36,7 @@ class TimeItProfiler(BaseModel):
             func_profiling_stats = (-1,-1,-1)
             
 
-        return TimeItProfilerResult(profiler=time_profiler,
+        return TimeItProfilerResult(profiler=self,
                                     profiled_func=func,
                                     func_kwargs=kwargs,
                                     func_result=func_result,
