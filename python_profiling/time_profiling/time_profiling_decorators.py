@@ -93,7 +93,7 @@ class TimeItProfilerDecorator(BaseModel):
     timer: FunctionType | BuiltinFunctionType = Field(default=time.perf_counter)
     number: int = Field(default=10000)
     repeat: int = Field(default=1)
-    storages: StorageConfig = Field(default_factory=list)
+    storages: StorageConfig = Field(default_factory=StorageConfig)
     time_profiler: TimeItProfiler = Field(init=False, default=None)
     observer: ProfilingObserver = Field(init=False, default=None)
     

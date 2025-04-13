@@ -46,14 +46,14 @@ class SerializationHandler:
     @ValidateType([('serializer', SerializerI), ('serializer_name', SerializerStrategy)]) # probably will be removedd
     def _add_serializer(cls, serializer: SerializerI, serializer_name: SerializerStrategy):
         cls._avaliable_serializers[serializer_name] = serializer
-        print(f'{serializer} has been added as {serializer_name}')
+        return f'{serializer} has been added as {serializer_name}'
         
         
     @classmethod
     def _remove_serializer(cls, serializer_name: SerializerStrategy):
         if serializer_name in cls._avaliable_serializers:
             del cls._avaliable_serializers[serializer_name]
-            print(f'{serializer_name} has been removed')
+            return f'{serializer_name} has been removed'
         
         
     @classmethod
