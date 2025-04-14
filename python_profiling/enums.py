@@ -1,6 +1,10 @@
+"""Enumerations for python profiling."""
+
 from enum import Enum
 
 class TimeProfilerStrategy(Enum):
+    """Enumeration of valid strategies for TimeProfiler."""
+    
     BASIC = 'basic'
     PRECISE = 'precise'
     CPU = 'cpu'
@@ -9,6 +13,8 @@ class TimeProfilerStrategy(Enum):
     
 
 class SerializerStrategy(Enum):
+    """Enumeration of valid output formats for serialization."""
+    
     JSON = 'json'
     TXT = 'txt'
     YAML = 'yaml'

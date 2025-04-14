@@ -1,21 +1,31 @@
+"""Time profiling decorators."""
+
 from abc import ABC, abstractmethod
+from functools import wraps
+from enum import Enum
+from typing import Type
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from python_profiling.enums import TimeProfilerStrategy, SerializerStrategy
 from python_profiling.configs import StorageConfig
 from python_profiling.time_profiling.time_profiler import *
 from python_profiling.time_profiling.timeit_profiler import TimeItProfiler
 from typing import ClassVar, Callable
-from functools import wraps
-from enum import Enum
-from typing import Type
+
 from Internals.checks import ValidateType
 from Internals.observers import ProfilingObserver
 from Internals.logger import logger
 
 
 class TimeProfilingDecoratorI(ABC):
-    _avaliable_time_profilers: ClassVar[dict] = {}
+    """Interface for time profiling decorators.
     
+    Args:
+        _avaliable_time_profilers (ClassVar[dict]): .
+    """
+    
+    _avaliable_time_profilers: ClassVar[dict] = {}
     
     @abstractmethod
     def __call__(self, func: Callable) -> Callable:
@@ -25,16 +35,13 @@ class TimeProfilingDecoratorI(ABC):
     def _add_profiler(self, profiler_name: Enum, profiler: Type):
         ...
        
-        
     @abstractmethod
     def change_profiler(self, profiler_name: Enum) -> None:
         ...
         
-        
     @classmethod
     def avaliable_profilers(cls):
         return cls._avaliable_time_profilers
-    
     
     @classmethod
     def _remove_profiler(cls, profiler_name: Enum):
@@ -42,9 +49,8 @@ class TimeProfilingDecoratorI(ABC):
             del cls._avaliable_time_profilers[profiler_name]
             logger.info('%s has been removed', profiler_name)
     
-    
-    
 class TimeProfilerDecorator(BaseModel, TimeProfilingDecoratorI):
+    """Decorator for time profilin with time module"""
     model_config = ConfigDict(arbitrary_types_allowed=True)
     
     _avaliable_time_profilers: ClassVar[dict[TimeProfilerStrategy, TimeProfilerI]] = {
