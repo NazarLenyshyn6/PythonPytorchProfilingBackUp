@@ -4,6 +4,7 @@ from types import BuiltinFunctionType, FunctionType
 from Internals.checks import ValidateType
 from Internals.serialization import SerializationHandler
 from python_profiling.enums import SerializerStrategy
+from Internals.logger import logger
 
 # Implementation of Basic Time Profiling Result
 class BaseTimeProfilingResult:
@@ -20,11 +21,13 @@ class BaseTimeProfilingResult:
     @ValidateType(('context', dict))
     def add_context(self, context: dict):
         self.__dict__.update(context)
-    
+        logger.info('profiling data has been extended with context %s successfully', context) # might be removed
+     
     
     def remove_context(self, context_element: Any):
         if context_element in self.__dict__:
             del self.__dict__[context_element]
+            logger.info('context %s has been removed from profiling data', context_element)
             
             
     def dump(self, 

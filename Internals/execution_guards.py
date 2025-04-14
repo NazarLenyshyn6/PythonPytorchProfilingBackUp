@@ -8,7 +8,8 @@ def serialization_handler(file_extension: str):
         @wraps(func)
         def wrapper(cls, data: dict, file_path: str, mode: str = 'w'):
             if not isinstance(file_path, str) or not file_path.endswith(file_extension):
-                return f'Impossible to serialize data because {file_path} has invalid extension, valid extension: {file_extension}'
+                logger.info('Impossible to serialize data because %s has invalid extenstion, valid extension: %s', file_path, file_extension)
+                return
             
             try:
                 func(cls, data, file_path, mode)
@@ -18,7 +19,8 @@ def serialization_handler(file_extension: str):
                 if os.path.exists(file_path) and not os.path.getsize(file_path):
                     os.remove(file_path)
                     
-                return f'Impossible to serialize data because to {file_path} of following exeption: {str(e)}'
+                logger.info('Impossigle to serialize data to %s because of following exception: %s', file_path, str(e))
+                return
                 
         return wrapper
     return decorator

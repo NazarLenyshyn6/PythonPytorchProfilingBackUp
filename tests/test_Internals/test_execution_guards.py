@@ -1,7 +1,6 @@
 import pytest, json, yaml
 from Internals.execution_guards import serialization_handler
 from tests.enums import FilePath, FileExtension
-from tests.fixtures.file_fixtures import *
 
 
 def to_json(cls, data, file_path, mode):
@@ -20,25 +19,29 @@ def to_yaml(cls, data: dict, file_path: str, mode: str):
         yaml.safe_dump(data, f) 
            
 
-@pytest.mark.parametrize('required_extension, file_path, data, mode, func, output_type',
-                         [
-                             (FileExtension.JSON, FilePath.JSON, {1: 1}, 'w', to_json, None),
-                             (FileExtension.JSON, FilePath.JSON, {'key': 'value'}, 'w', to_json, None),
-                             (FileExtension.TXT, FilePath.TXT, {'key': 'value'}, 'w', to_txt, str),
-                             (FileExtension.YAML, FilePath.YAML, {'key': 'value'}, 'w', to_yaml, None),
-                             (FileExtension.JSON, FilePath.JSON, {1: lambda: 0}, 'w', to_json, str),  
-                             (FileExtension.JSON, FilePath.JSON, {1: 'value'}, 'invalid_mode', to_json, str),
-                         ]
-                         )
-def test_serialization_handler(required_extension, 
-                               file_path, 
-                               data, 
-                               mode, 
-                               func, 
-                               output_type, 
-                               remove_dummy_file,
-                               common_file_extension,
-                               common_file_path):
+@pytest.mark.parametrize(
+    'required_extension, file_path, data, mode, func, output_type',
+    [
+        (FileExtension.JSON, FilePath.JSON, {1: 1}, 'w', to_json, None),
+        (FileExtension.JSON, FilePath.JSON, {'key': 'value'}, 'w', to_json, None),
+        (FileExtension.TXT, FilePath.TXT, {'key': 'value'}, 'w', to_txt, str),
+        (FileExtension.YAML, FilePath.YAML, {'key': 'value'}, 'w', to_yaml, None),
+        (FileExtension.JSON, FilePath.JSON, {1: lambda: 0}, 'w', to_json, None),  
+        (FileExtension.JSON, FilePath.JSON, {1: 'value'}, 'invalid_mode', to_json, None),
+        ]
+    )
+def test_serialization_handler(
+    required_extension, 
+    file_path, 
+    data, 
+    mode, 
+    func, 
+    output_type, 
+    remove_dummy_file,
+    common_file_extension,
+    common_file_path
+    ):
+    
     new_func = serialization_handler(common_file_extension[required_extension])(func)
     result = new_func(None, data, common_file_path[file_path], mode)
     remove_dummy_file(common_file_path[file_path])

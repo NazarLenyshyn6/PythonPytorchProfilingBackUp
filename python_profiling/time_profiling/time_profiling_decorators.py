@@ -10,6 +10,7 @@ from enum import Enum
 from typing import Type
 from Internals.checks import ValidateType
 from Internals.observers import ProfilingObserver
+from Internals.logger import logger
 
 
 class TimeProfilingDecoratorI(ABC):
@@ -39,7 +40,7 @@ class TimeProfilingDecoratorI(ABC):
     def _remove_profiler(cls, profiler_name: Enum):
         if profiler_name in cls._avaliable_time_profilers:
             del cls._avaliable_time_profilers[profiler_name]
-            print(f'{profiler_name} has been removed')
+            logger.info('%s has been removed', profiler_name)
     
     
     
@@ -55,7 +56,7 @@ class TimeProfilerDecorator(BaseModel, TimeProfilingDecoratorI):
     }
     
     time_profiler_strategy: TimeProfilerStrategy = Field(default=TimeProfilerStrategy.BASIC)
-    storages: StorageConfig = Field(default_factory=list)
+    storages: StorageConfig = Field(default_factory=StorageConfig)
     time_profiler: TimeProfilerI = Field(init=False, default=None)
     observer: ProfilingObserver = Field(init=False, default=None)
     
@@ -69,7 +70,7 @@ class TimeProfilerDecorator(BaseModel, TimeProfilingDecoratorI):
     @ValidateType([('profiler_name', TimeProfilerStrategy), ('profiler', TimeProfilerI)])
     def _add_profiler(cls, profiler_name: TimeProfilerStrategy, profiler: TimeProfilerI):
         cls._avaliable_time_profilers[profiler_name] = profiler
-        print(f'{profiler} has been added as {profiler_name}')
+        logger.info('%s has been added as %s', profiler, profiler_name)
         
         
     @ValidateType(('profiler_name', TimeProfilerStrategy))

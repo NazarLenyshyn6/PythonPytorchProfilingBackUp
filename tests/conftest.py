@@ -1,6 +1,14 @@
 import pytest, os
 from Internals.logger import logger
 
+pytest_plugins = [
+    "tests.fixtures.configs_fixtures",
+    "tests.fixtures.file_fixtures",
+    "tests.fixtures.profiling_results_fixtures",
+    "tests.fixtures.serialization_fixture",
+    "tests.fixtures.time_profiler_fixtures"
+]
+
 
 @pytest.fixture
 def remove_dummy_file():

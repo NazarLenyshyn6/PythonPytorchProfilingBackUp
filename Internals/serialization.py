@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from python_profiling.enums import SerializerStrategy
 from Internals.checks import ValidateType
 from Internals.execution_guards import serialization_handler
+from Internals.logger import logger
 
 
 class SerializerI(ABC):
@@ -46,14 +47,14 @@ class SerializationHandler:
     @ValidateType([('serializer', SerializerI), ('serializer_name', SerializerStrategy)]) # probably will be removedd
     def _add_serializer(cls, serializer: SerializerI, serializer_name: SerializerStrategy):
         cls._avaliable_serializers[serializer_name] = serializer
-        return f'{serializer} has been added as {serializer_name}'
+        logger.info('%s has been added as %s', serializer, serializer_name)
         
         
     @classmethod
     def _remove_serializer(cls, serializer_name: SerializerStrategy):
         if serializer_name in cls._avaliable_serializers:
             del cls._avaliable_serializers[serializer_name]
-            return f'{serializer_name} has been removed'
+            logger.info('%s has been removed', serializer_name)
         
         
     @classmethod
