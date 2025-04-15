@@ -77,8 +77,6 @@ class BaseTimeProfilingResult:
                                                 mode=mode,
                                                 serializer_strategy=serializer_strategy)
     
-    
-# Implementation of result provided by time profiler
 @dataclass
 class TimeProfilerResult(BaseTimeProfilingResult):
     """Structured profiling result for time profiling with time module.
@@ -154,3 +152,36 @@ class TimeItProfilerResult(BaseTimeProfilingResult):
         
     def __repr__(self) -> str:
         return f'TimeItProfilerResult(profiler={self.profiler.__class__.__name__}, profiled_func={self.profiled_func})'
+    
+@dataclass
+class LineTimeProfilerResult(BaseTimeProfilingResult):
+    """Structured profiling result for time profiling with line_profiler module.
+    
+    Attributes:
+        profiler: An instance of LineProfiler.
+        profiled_func: Profiled function.
+        func_kwargs: Keyword arguments of profiled function.
+        func_result: Profiled function result.
+        func_profiling_result: Structured profiling result.
+        func_exception: Exception raised during execution, if any.
+    """
+    
+    profiler: Type
+    profiled_func: BuiltinFunctionType | FunctionType
+    func_kwargs: dict
+    func_result: Any
+    func_profiling_result: str
+    func_exception: str | None = None
+    
+    def __str__(self) -> str:
+        return (f"Profiler: {self.profiler}\n"
+                f"Profiled Function: {self.profiled_func.__name__}\n"
+                f"Function Kwargs: {self.func_kwargs}\n"
+                f"Function Result: {self.func_result}\n"
+                f"Function Profiling Result: {self.func_profiling_result}"
+                f"Function Exceptions: {self.func_exception}")
+        
+    def __repr__(self) -> str:
+        return f'LineTimeProfilerResult(profiler={self.profiler.__class__.__name__}, profiled_func={self.profiled_func})'
+     
+    

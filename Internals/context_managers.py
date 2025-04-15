@@ -2,24 +2,34 @@
 
 import timeit
 from typing import Callable
+from types import BuiltinFunctionType, FunctionType
 
-
-class BaseManager:
-    """Contains functions that are common for all profiling context managers."""
+import line_profiler
+        
+class BaseProfilerManager:   
+    """Base context manager for safe profiling processes."""
     
-    @staticmethod
-    def handle_exception(obj, exc_type) -> None:
-        """Base method for handling exception that occurs during profiling process.
+    def __enter__(self):
+        """Enter context."""
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        """Handle exceptions if occurs.
         
         Args:
-            obj: The profiling manager instance.
-            exc_type: Type of raised exception.
+            exc_type: The type of the exception.
+            exc_value: The type of the exception.
+            traceback: The traceback object.
+        
+        Returns:
+            bool: Always returns True to suppress exceptions.
         """
-        obj.exception = True if exc_type else False
-        obj.func_exception = exc_type if exc_type else None
+        self.exception = True if exc_type else False
+        self.func_exception = exc_type if exc_type else None
+        return True
             
 
-class TimeProfilerManager:
+class TimeProfilerManager(BaseProfilerManager):
     """Context manager for profiling processes of classes that inherets from TimeProfilerI class.
     
     Args:
@@ -51,36 +61,34 @@ class TimeProfilerManager:
         """
         self.profiling_stop = self.profiling_timer()
         self.func_execution_time = self.profiling_stop - self.profiling_start
-        
-        BaseManager.handle_exception(self, exc_type)
+        super().__exit__(exc_type, exc_value, traceback)
         return True
     
     def __repr__(self) -> str:
         return f'TimeProfilingManager(profiling_timer={self.profiling_timer})'
     
+
+class LineTimeProfilerManager(BaseProfilerManager):
+    """Context manager for profiling process of  LineTimeProfiler class."""
     
-# Implementation of context manager for TimeIt Profiler
-class TimeItProfilerManager:        
-    """Contest manager for profiling processes of TimeItProfiler class."""
-    
-    def __enter__(self) -> 'TimeItProfilerManager':
-        """Enter context.
+    def __init__(
+        self, 
+        line_profiler_ : line_profiler.LineProfiler, 
+        profiled_func: BuiltinFunctionType | FunctionType
+        ):
+        self.line_profiler_ = line_profiler_
+        self.profiled_func = profiled_func
         
-        Returns:
-            TimeItProfilerManager: The current instance.
-        """
+    def __enter__(self):
+        self.line_profiler_.add_function(self.profiled_func)
+        self.line_profiler_.enable_by_count()
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):
-        """Handle exceptions if occurs.
-        
-        Args:
-            exc_type: The type of the exception.
-            exc_value: The type of the exception.
-            traceback: The traceback object.
-        
-        Returns:
-            bool: Always returns True to suppress exceptions.
-        """
-        BaseManager.handle_exception(self, exc_type)
+        self.line_profiler_.disable_by_count()
+        super().__exit__(exc_type, exc_value, traceback)
         return True
+        
+    
+
+    

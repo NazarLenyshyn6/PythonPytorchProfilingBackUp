@@ -48,7 +48,7 @@ class TimeItProfiler(pydantic.BaseModel):
             InvalidInputTypeError: If the function is not of the correct type.
         """
         
-        with context_managers.TimeItProfilerManager() as time_profiler_manager:
+        with context_managers.BaseProfilerManager() as time_profiler_manager:
             time_profiler = self._get_time_profiler(func, kwargs)
             func_result = func(**kwargs)
             profiling_result = time_profiler.repeat(repeat=self.repeat, number=self.number)

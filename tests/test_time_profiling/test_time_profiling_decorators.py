@@ -84,6 +84,14 @@ INVALID_STRATEGY = 'invalid_strategy'
             time_profiling_results.TimeItProfilerResult
         ),
         (
+            time_profiling_decorators.LineTimeProfilerDecorator,
+            {'storages': COMMON_STORAGE},
+            lambda x: x + 1,
+            {'x': 1},
+            contextlib.nullcontext(),
+            time_profiling_results.LineTimeProfilerResult
+        ),
+        (
             time_profiling_decorators.TimeProfilerDecorator,
             {'time_profiler_strategy': INVALID_STRATEGY, 'storages': COMMON_STORAGE},
             lambda x: x + 1,
