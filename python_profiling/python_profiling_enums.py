@@ -1,8 +1,8 @@
-"""Enumerations for python profiling."""
+"""Enumerations for Python profiling."""
 
-from enum import Enum
+import enum
 
-class TimeProfilerStrategy(Enum):
+class TimeProfilerStrategy(enum.Enum):
     """Enumeration of valid strategies for TimeProfiler."""
     
     BASIC = 'basic'
@@ -12,7 +12,7 @@ class TimeProfilerStrategy(Enum):
     MONOTONIC = 'monotonic'
     
 
-class SerializerStrategy(Enum):
+class SerializerStrategy(enum.Enum):
     """Enumeration of valid output formats for serialization."""
     
     JSON = 'json'

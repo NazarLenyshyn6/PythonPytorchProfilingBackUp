@@ -1,17 +1,24 @@
-import pytest, time
-from python_profiling.time_profiling.timeit_profiler import TimeItProfiler
-from contextlib import nullcontext
-from pydantic import ValidationError
-from Internals.exceptions import InvalidInputTypeError
+"""Tests for timeit_profiler module."""
+
+import pytest
+import time
+import contextlib
+
+import pydantic
+
+from python_profiling.time_profiling import timeit_profiler
+from Internals import exceptions
+
+INVALID_NUMBER = 'hello'
 
 
 @pytest.mark.parametrize(
     'timer, number, repeat, func, func_result, kwargs, raised_exception, func_exception',
     [
-        (time.time, 10000, 5, lambda x: x + 1, 2, {'x': 1}, nullcontext(), None),
-        (time.time, 'hello', 5, lambda x: x + 1, 2, {'x': 1}, pytest.raises(ValidationError), None),
-        (time.time, 10000, 5, 11, 2, {'x': 1}, pytest.raises(InvalidInputTypeError), None),
-        (time.time, 10000, 5, lambda x: 1/x, None, {'x': 0}, nullcontext(), ZeroDivisionError)
+        (time.time, 10000, 5, lambda x: x + 1, 2, {'x': 1}, contextlib.nullcontext(), None),
+        (time.time, INVALID_NUMBER, 5, lambda x: x + 1, 2, {'x': 1}, pytest.raises(pydantic.ValidationError), None),
+        (time.time, 10000, 5, 11, 2, {'x': 1}, pytest.raises(exceptions.InvalidInputTypeError), None),
+        (time.time, 10000, 5, lambda x: 1/x, None, {'x': 0}, contextlib.nullcontext(), ZeroDivisionError)
         ]
     )
 def test_TimeItProfiler(
@@ -25,7 +32,7 @@ def test_TimeItProfiler(
     func_exception
     ):
     with raised_exception:
-        profiler = TimeItProfiler(timer=timer, number=number, repeat=repeat)
+        profiler = timeit_profiler.TimeItProfiler(timer=timer, number=number, repeat=repeat)
         result = profiler.profile(func=func, **kwargs)
         
         assert result.profiler == profiler

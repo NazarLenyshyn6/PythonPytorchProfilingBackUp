@@ -1,12 +1,14 @@
 """Time Profiling of Python functions with time module."""
 
+import time
+import threading
 from abc import ABC, abstractmethod
 from types import BuiltinFunctionType, FunctionType
 from typing import Callable
-import time
-import threading
 
-from python_profiling.time_profiling.time_profiling_results import TimeProfilerResult
+from python_profiling.time_profiling import time_profiling_results
+
+
 from Internals.context_managers import TimeProfilerManager
 from Internals.checks import ValidateType
 
@@ -15,7 +17,7 @@ class TimeProfilerI(ABC):
     """Interface for time profilers using the time module."""
     
     @abstractmethod
-    def profile(cls, func: BuiltinFunctionType |  FunctionType, **kwargs) -> TimeProfilerResult:
+    def profile(cls, func: BuiltinFunctionType | FunctionType, **kwargs) -> time_profiling_results.TimeProfilerResult:
         ...
         
 class TimeProfiler(TimeProfilerI):
@@ -29,7 +31,7 @@ class TimeProfiler(TimeProfilerI):
         self.profilig_timer = profiling_timer
         
     @ValidateType(('func', (BuiltinFunctionType, FunctionType)))
-    def profile(self, func: BuiltinFunctionType | FunctionType, **kwargs) -> TimeProfilerResult:
+    def profile(self, func: BuiltinFunctionType | FunctionType, **kwargs) -> time_profiling_results.TimeProfilerResult:
         """Profile the execution time of a function.
         
         Args:
@@ -45,7 +47,7 @@ class TimeProfiler(TimeProfilerI):
         with TimeProfilerManager(profiling_timer=self.profilig_timer) as time_profiler_manager:
             profiling_result = func(**kwargs)
             
-        return TimeProfilerResult(
+        return time_profiling_results.TimeProfilerResult(
             profiler=self,
             profiled_func=func,
             func_args=None,
@@ -64,7 +66,7 @@ class ThreadBasedTimeProfiler(TimeProfilerI):
     
     @classmethod
     @ValidateType(('func', (BuiltinFunctionType, FunctionType)))
-    def profile(cls, func: BuiltinFunctionType | FunctionType, **kwargs) -> TimeProfilerResult:
+    def profile(cls, func: BuiltinFunctionType | FunctionType, **kwargs) -> time_profiling_results.TimeProfilerResult:
         """Profile the execution time of a function in a separate thread.
         
         Args:
@@ -83,7 +85,7 @@ class ThreadBasedTimeProfiler(TimeProfilerI):
             thread.start()
             thread.join()
             
-        return TimeProfilerResult(
+        return time_profiling_results.TimeProfilerResult(
             profiler=cls,
             profiled_func=func,
             func_args=None,

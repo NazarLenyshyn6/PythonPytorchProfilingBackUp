@@ -1,7 +1,7 @@
 """Helper functions that encapsulate logic of expection handling to guarantee safe function execution."""
 
 import os
-from functools import wraps
+import functools
 from Internals.logger import logger
 from typing import Callable
 
@@ -24,7 +24,7 @@ def serialization_handler(file_extension: str):
         Returns:
             Callable: Wrapped function that performs serialization.
         """
-        @wraps(func)
+        @functools.wraps(func)
         def wrapper(cls, data: dict, file_path: str, mode: str = 'w'):
             '''Wrapped function that validates path and handles serialization exceptions.
             

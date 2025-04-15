@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from typing import Any, Type
 from types import BuiltinFunctionType, FunctionType
 
-from Internals.checks import ValidateType
-from Internals.serialization import SerializationHandler
-from python_profiling.enums import SerializerStrategy
+from Internals import checks
+from Internals import serialization
+from python_profiling import python_profiling_enums
 from Internals.logger import logger
 
 
@@ -15,23 +15,15 @@ class BaseTimeProfilingResult:
     
     @property
     def profiling_data(self):
-        """Returns profiling data as a dictionary.
-        
-        Returns:
-            dict: Dictionary containing all profiling data.
-        """
+        """Returns profiling data as a dictionary."""
         return self.__dict__
     
     @property
     def profiling_data_str(self):
-        """Returns profiling data with all values as strings.
-        
-        Returns:
-            dict: Dictionary with all profiling data as strings.
-        """
+        """Returns profiling data with all values as strings."""
         return {key: f'{value}' for key, value in self.profiling_data.items()}
     
-    @ValidateType(('context', dict))
+    @checks.ValidateType(('context', dict))
     def add_context(self, context: dict) -> None:
         """Adds additional metadata to profiling result.
         
@@ -52,14 +44,7 @@ class BaseTimeProfilingResult:
      
     
     def remove_context(self, context_element: Any) -> None:
-        """Removes a key from the profiling context.
-        
-        Args:
-            context_element: Key to remove from profiling data.
-        
-        Returns:
-            None
-        """
+        """Removes a key from the profiling context."""
         if context_element in self.__dict__:
             del self.__dict__[context_element]
             logger.info('context %s has been removed from profiling data', context_element)
@@ -69,7 +54,7 @@ class BaseTimeProfilingResult:
         self, 
         file_path: str, 
         mode: str = 'w', 
-        serializer_strategy:SerializerStrategy = SerializerStrategy.TXT
+        serializer_strategy: python_profiling_enums.SerializerStrategy = python_profiling_enums.SerializerStrategy.TXT
         ) -> None:
         """Serializes data to a file using the chosen serialization strategy.
         
@@ -87,10 +72,10 @@ class BaseTimeProfilingResult:
             MissingArgumentError: If a required argument is missing.
         """
         
-        SerializationHandler.dump(data=self.profiling_data_str,
-                                  file_path=file_path,
-                                  mode=mode,
-                                  serializer_strategy=serializer_strategy)
+        serialization.SerializationHandler.dump(data=self.profiling_data_str,
+                                                file_path=file_path,
+                                                mode=mode,
+                                                serializer_strategy=serializer_strategy)
     
     
 # Implementation of result provided by time profiler

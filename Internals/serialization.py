@@ -6,10 +6,11 @@ import json
 
 import yaml
 
-from python_profiling.enums import SerializerStrategy
-from Internals.checks import ValidateType
-from Internals.execution_guards import serialization_handler
+from python_profiling import python_profiling_enums
+from Internals import checks
+from Internals import execution_guards
 from Internals.logger import logger
+from Internals import serialization
 
 
 class SerializerI(ABC):
@@ -25,14 +26,14 @@ class JSONSerializer(SerializerI):
     """Serialize data in JSON format."""
     
     @classmethod
-    @serialization_handler('.json')
+    @execution_guards.serialization_handler('.json')
     def dump(cls, data: dict, file_path: str, mode: str) -> None:
         """Serializes the data to a file using JSON format.
         
         Args:
             data (dict): Data to serialize.
             file_path (str): Output file path.
-            mode (str):  File mode, default is 'w' (write).
+            mode (str): File mode, default is 'w' (write).
             
         Returns:
             None
@@ -45,7 +46,7 @@ class TXTSerializer(SerializerI):
     """Serializes data in plain text format."""
     
     @classmethod
-    @serialization_handler('.txt')
+    @execution_guards.serialization_handler('.txt')
     def dump(cls, data: dict, file_path: str, mode: str):
         """Serializes the data to a file using plain text format.
         
@@ -66,7 +67,7 @@ class YAMLSerializer(SerializerI):
     """Serializes data in YAML format."""
     
     @classmethod
-    @serialization_handler('.yaml')
+    @execution_guards.serialization_handler('.yaml')
     def dump(cls, data: dict, file_path: str, mode: str):
         """Serializes the data to a file using YAML format.
         
@@ -89,13 +90,24 @@ class SerializationHandler:
         _avaliable_serializers (dict[SerializerStrategy, SerializerI]): A registry
             of available serializers mapped by their respective strategy.
     """
-    _avaliable_serializers = {SerializerStrategy.JSON: JSONSerializer,
-                             SerializerStrategy.TXT: TXTSerializer,
-                             SerializerStrategy.YAML: YAMLSerializer}  
+    _avaliable_serializers = {
+        python_profiling_enums.SerializerStrategy.JSON: JSONSerializer,
+        python_profiling_enums.SerializerStrategy.TXT: TXTSerializer,
+        python_profiling_enums.SerializerStrategy.YAML: YAMLSerializer
+        }  
     
     @classmethod
-    @ValidateType([('serializer', SerializerI), ('serializer_name', SerializerStrategy)]) # probably will be removedd
-    def _add_serializer(cls, serializer: SerializerI, serializer_name: SerializerStrategy) -> None:
+    @checks.ValidateType(
+        [
+            ('serializer', serialization.SerializerI), 
+            ('serializer_name', python_profiling_enums.SerializerStrategy)
+            ]
+        ) 
+    def _add_serializer(
+        cls, 
+        serializer: SerializerI, 
+        serializer_name: python_profiling_enums.SerializerStrategy
+        ) -> None:
         """Registers a new serializer into the available serializers registry.
         
         Args:
@@ -115,15 +127,8 @@ class SerializationHandler:
         
         
     @classmethod
-    def _remove_serializer(cls, serializer_name: SerializerStrategy) -> None:
-        """Removes a serializer from the registry.
-
-        Args:
-            serializer_name (SerializerStrategy): The serializer name to remove.
-
-        Returns:
-            None
-        """
+    def _remove_serializer(cls, serializer_name: python_profiling_enums.SerializerStrategy) -> None:
+        """Removes a serializer from the registry."""
         if serializer_name in cls._avaliable_serializers:
             del cls._avaliable_serializers[serializer_name]
             logger.info('%s has been removed', serializer_name)
@@ -131,22 +136,19 @@ class SerializationHandler:
         
     @classmethod
     def avaliable_serializers(cls):
-        """Returns the currently registered serializers.
-
-        Returns:
-            dict: Dictionary of all available serializers.
-        """
+        """Returns the currently registered serializers."""
         return cls._avaliable_serializers
         
         
     @classmethod
-    @ValidateType(('serializer_strategy', SerializerStrategy)) # probably will be removed
-    def dump(cls, 
-             data: dict, 
-             file_path: str,
-             mode: str = 'w', 
-             serializer_strategy: SerializerStrategy = SerializerStrategy.TXT
-             ) -> None:
+    @checks.ValidateType(('serializer_strategy', python_profiling_enums.SerializerStrategy)) # probably will be removed
+    def dump(
+        cls, 
+        data: dict, 
+        file_path: str,
+        mode: str = 'w', 
+        serializer_strategy: python_profiling_enums.SerializerStrategy = python_profiling_enums.SerializerStrategy.TXT
+        ) -> None:
         """Serializes data to a file using the chosen serialization strategy.
         
         Args:

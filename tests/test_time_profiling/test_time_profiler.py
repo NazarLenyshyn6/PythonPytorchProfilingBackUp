@@ -1,5 +1,10 @@
-import pytest, time
-from python_profiling.time_profiling.time_profiler import TimeProfiler, ThreadBasedTimeProfiler
+"""Test for time_profiler module."""
+
+import time
+
+import pytest
+
+from python_profiling.time_profiling import time_profiler
 
 
 @pytest.mark.parametrize(
@@ -18,10 +23,9 @@ def test_TimeProfiler(
     check_time_profiling_result
     ):
     
-    profiler = TimeProfiler(profiling_timer=profiling_timer)
+    profiler = time_profiler.TimeProfiler(profiling_timer=profiling_timer)
     result = profiler.profile(func=func, **kwargs)
     check_time_profiling_result(result, profiler, func, kwargs, func_result, func_exception)
-    
     
     
 @pytest.mark.parametrize(
@@ -39,5 +43,12 @@ def test_ThreadBasedTimeProfiler(
     check_time_profiling_result
     ):
     
-    result = ThreadBasedTimeProfiler.profile(func=func, **kwargs)
-    check_time_profiling_result(result, ThreadBasedTimeProfiler, func, kwargs, func_result, func_exception)
+    result = time_profiler.ThreadBasedTimeProfiler.profile(func=func, **kwargs)
+    check_time_profiling_result(
+        result, 
+        time_profiler.ThreadBasedTimeProfiler, 
+        func, 
+        kwargs, 
+        func_result, 
+        func_exception
+        )

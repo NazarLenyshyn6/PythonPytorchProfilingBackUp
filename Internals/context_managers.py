@@ -2,8 +2,6 @@
 
 import timeit
 from typing import Callable
-from dataclasses import dataclass
-from functools import wraps
 
 
 class BaseManager:
@@ -27,6 +25,7 @@ class TimeProfilerManager:
     Args:
         profiling_time (Callable): Timer from time module which will measure function execution time.
     """
+    
     def __init__(self, profiling_timer):
         self.profiling_timer = profiling_timer
     

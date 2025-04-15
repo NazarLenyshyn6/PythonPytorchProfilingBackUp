@@ -1,8 +1,9 @@
-import pytest, os
-from Internals.observers import ProfilingObserver
-from python_profiling.configs import StorageConfig
-from python_profiling.enums import SerializerStrategy
-from tests.enums import FilePath
+"""Tests for observers module."""
+
+import os
+import pytest
+
+from Internals import observers
 
 
 def test_ProfilingObserver(
@@ -13,14 +14,13 @@ def test_ProfilingObserver(
     ):    
     
     valid = True
-    ProfilingObserver(storages=common_storage).dump(dummy_TimeProfilerResult)
+    observers.ProfilingObserver(storages=common_storage).dump(dummy_TimeProfilerResult)
     
     for file_path in common_storage.file_paths:
         if not os.path.exists(file_path): 
             valid = False
-            
         remove_dummy_file(file_path)
-            
+        
     assert valid
     
     

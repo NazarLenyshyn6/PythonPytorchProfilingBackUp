@@ -4,27 +4,27 @@ import timeit
 import time
 from types import FunctionType, BuiltinFunctionType
 
-from pydantic import BaseModel, ConfigDict, Field
+import pydantic
 
-from Internals.checks import ValidateType
-from python_profiling.time_profiling.time_profiling_results import TimeItProfilerResult
-from Internals.context_managers import TimeItProfilerManager
+from Internals import checks
+from python_profiling.time_profiling import time_profiling_results
+from Internals import context_managers
 
 
-class TimeItProfiler(BaseModel):
+class TimeItProfiler(pydantic.BaseModel):
     """Time profiler that uses a specified timer from the time module and timeit module.
     
     Attributes:
-        timer (FunctionType | BuiltinFunctionType): .
+        timer (FunctionType | BuiltinFunctionType): Timer function used for profiling.
         number (int): Number of times to execute the function per repeat.
         repeat (int): Number of repetitions to run.
     """
     
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
     
-    timer: FunctionType | BuiltinFunctionType = Field(default=time.perf_counter)
-    number: int = Field(default=10000)
-    repeat: int = Field(default=1)
+    timer: FunctionType | BuiltinFunctionType = pydantic.Field(default=time.perf_counter)
+    number: int = pydantic.Field(default=10000)
+    repeat: int = pydantic.Field(default=1)
     
     def _get_time_profiler(self, func: FunctionType | BuiltinFunctionType, kwargs: dict) -> timeit.Timer:
         return timeit.Timer(stmt=lambda : func(**kwargs), timer=self.timer)
@@ -34,8 +34,8 @@ class TimeItProfiler(BaseModel):
         return min(profiling_result), sum(profiling_result) / len(profiling_result), max(profiling_result)
 
     
-    @ValidateType(('func', (FunctionType, BuiltinFunctionType)))
-    def profile(self, func: FunctionType | BuiltinFunctionType ,**kwargs) -> TimeItProfilerResult:
+    @checks.ValidateType(('func', (FunctionType, BuiltinFunctionType)))
+    def profile(self, func: FunctionType | BuiltinFunctionType ,**kwargs) -> time_profiling_results.TimeItProfilerResult:
         """Profile the execution time of a function.
         
         Args:
@@ -48,7 +48,7 @@ class TimeItProfiler(BaseModel):
             InvalidInputTypeError: If the function is not of the correct type.
         """
         
-        with TimeItProfilerManager() as time_profiler_manager:
+        with context_managers.TimeItProfilerManager() as time_profiler_manager:
             time_profiler = self._get_time_profiler(func, kwargs)
             func_result = func(**kwargs)
             profiling_result = time_profiler.repeat(repeat=self.repeat, number=self.number)
@@ -58,7 +58,7 @@ class TimeItProfiler(BaseModel):
             func_result = None
             func_profiling_stats = (-1,-1,-1)
             
-        return TimeItProfilerResult(
+        return time_profiling_results.TimeItProfilerResult(
             profiler=self,
             profiled_func=func,
             func_kwargs=kwargs,

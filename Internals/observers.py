@@ -3,9 +3,9 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
-from python_profiling.enums import SerializerStrategy
-from python_profiling.time_profiling.time_profiling_results import BaseTimeProfilingResult
-from python_profiling.configs import StorageConfig
+from python_profiling import python_profiling_enums
+from python_profiling.time_profiling import time_profiling_results
+from python_profiling import python_profiling_configs
 
 
 @dataclass
@@ -15,9 +15,9 @@ class ProfilingObserver:
     Attrigutes:
         storages (StorageConfig): Data Transfer Object that contains all configured output destinations.
     """
-    storages: StorageConfig
+    storages: python_profiling_configs.StorageConfig
     
-    def dump(self, result: BaseTimeProfilingResult) -> None:
+    def dump(self, result: time_profiling_results.BaseTimeProfilingResult) -> None:
         """Writes the profiling result to all configured storage sources.
         
         Args:

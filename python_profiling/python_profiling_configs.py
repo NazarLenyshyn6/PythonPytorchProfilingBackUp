@@ -1,10 +1,11 @@
 """Data Transfer Objects for Python profiling."""
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
-from python_profiling.enums import SerializerStrategy
+import pydantic
+
+from python_profiling import python_profiling_enums
 
 
-class StorageConfig(BaseModel):
+class StorageConfig(pydantic.BaseModel):
     """Configuration for storing profiling results.
     
     Attributes:
@@ -15,18 +16,18 @@ class StorageConfig(BaseModel):
         modes(list[str]):  List of file write modes. If not provided,
             defaults to ['w'] for each serializer.
     """
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
     
-    serializers_strategies: list[SerializerStrategy] = Field(default_factory=list)
-    file_paths: list[str] = Field(default_factory=list)
-    modes: list[str] | None = Field(default=None)
+    serializers_strategies: list[python_profiling_enums.SerializerStrategy] = pydantic.Field(default_factory=list)
+    file_paths: list[str] = pydantic.Field(default_factory=list)
+    modes: list[str] | None = pydantic.Field(default=None)
     
     def model_post_init(self, __context):
         """Assign default write mode 'w' to each file if none is provided."""
         if not self.modes:
             self.modes = ['w' for _ in range(len(self.serializers_strategies))]
             
-    @model_validator(mode='after')
+    @pydantic.model_validator(mode='after')
     def validate_lenghts_match(self) -> 'StorageConfig':
         """Validate that all configuration lists are of equal length.
         
