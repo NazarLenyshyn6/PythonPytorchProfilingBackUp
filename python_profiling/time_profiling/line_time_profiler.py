@@ -35,7 +35,7 @@ class LineTimeProfiler:
     @classmethod
     @checks.ValidateType(('func', (BuiltinFunctionType, FunctionType)))
     def profile(
-        self, 
+        cls, 
         func: BuiltinFunctionType | FunctionType,
         **kwargs
         ) -> time_profiling_results.LineTimeProfilerResult:
@@ -50,16 +50,16 @@ class LineTimeProfiler:
         Raises:
             InvalidInputTypeError: If the function is not of the correct type.
         """
-        line_profiler_ = self._init_line_profiler()
+        line_profiler_ = cls._init_line_profiler()
         
         with context_managers.LineTimeProfilerManager(line_profiler_=line_profiler_, profiled_func=func) as line_time_profiler_manager:
             profiling_result = func(**kwargs)
         
         return time_profiling_results.LineTimeProfilerResult(
-            profiler=self,
+            profiler=cls,
             profiled_func=func,
             func_kwargs=kwargs,
             func_result=profiling_result if not line_time_profiler_manager.exception else None,
-            func_profiling_result=self._get_profiling_result(line_profiler_),
+            func_profiling_result=cls._get_profiling_result(line_profiler_),
             func_exception=line_time_profiler_manager.func_exception
             )

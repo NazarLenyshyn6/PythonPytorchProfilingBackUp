@@ -13,5 +13,4 @@ def check_time_profiling_result():
         assert result.func_result == func_result
         assert type(result.func_execution_time) == float
         assert result.func_exception == func_exception
-        
     return wrapper

@@ -1,4 +1,4 @@
-"""Test for time_profiler module."""
+"""Tests for time_profiler module."""
 
 import time
 
@@ -25,7 +25,14 @@ def test_TimeProfiler(
     
     profiler = time_profiler.TimeProfiler(profiling_timer=profiling_timer)
     result = profiler.profile(func=func, **kwargs)
-    check_time_profiling_result(result, profiler, func, kwargs, func_result, func_exception)
+    check_time_profiling_result(
+        result, 
+        profiler, 
+        func, 
+        kwargs, 
+        func_result, 
+        func_exception
+        )
     
     
 @pytest.mark.parametrize(
