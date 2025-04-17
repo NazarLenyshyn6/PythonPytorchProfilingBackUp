@@ -8,8 +8,18 @@ from python_profiling.time_profiling import time_profiling_results
 from python_profiling import python_profiling_configs
 
 
+class ProfilingObserverI(ABC):
+    """Interface class for Profiling observers."""
+    @abstractmethod
+    def __init__(self, storagest: python_profiling_configs.StorageConfig):
+        ...
+        
+    @abstractmethod
+    def dump(self, result: time_profiling_results.BaseTimeProfilingResult) -> None:
+        ...
+
 @dataclass
-class ProfilingObserver:
+class ProfilingObserver(ProfilingObserverI):
     """Observer that stores configuration for saving profiling results to multiple sources.
     
     Attrigutes:

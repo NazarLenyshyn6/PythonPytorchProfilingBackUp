@@ -17,16 +17,13 @@ def test_LineTimeProfiler(
     func_kwargs,  
     func_result,
     func_exception,
-    check_line_time_profiling_result
     ):
     result =  line_time_profiler.LineTimeProfiler.profile(func=profiled_func, **func_kwargs)
-    check_line_time_profiling_result(
-        result, 
-        line_time_profiler.LineTimeProfiler,
-        profiled_func,
-        func_kwargs,
-        func_result,
-        str,
-        func_exception
-        )
+    assert result.profiler == line_time_profiler.LineTimeProfiler
+    assert result.profiled_func == profiled_func
+    assert result.func_kwargs  ==  func_kwargs
+    assert result.func_result == func_result
+    assert isinstance(result.func_profiling_result, str)
+    assert  func_exception  ==  func_exception
+
     

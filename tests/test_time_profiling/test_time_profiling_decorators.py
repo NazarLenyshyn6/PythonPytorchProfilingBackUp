@@ -92,6 +92,14 @@ INVALID_STRATEGY = 'invalid_strategy'
             time_profiling_results.LineTimeProfilerResult
         ),
         (
+            time_profiling_decorators.CallGraphTimeProfilerDecorator,
+            {'storages': COMMON_STORAGE},
+            lambda x: x + 1,
+            {'x': 1},
+            contextlib.nullcontext(),
+            time_profiling_results.CallGraphTimeProfilerResult
+        ),
+        (
             time_profiling_decorators.TimeProfilerDecorator,
             {'time_profiler_strategy': INVALID_STRATEGY, 'storages': COMMON_STORAGE},
             lambda x: x + 1,
@@ -130,7 +138,9 @@ def test_time_profiler_decorator(
     common_storage,
     remove_dummy_file
 ):
+    """Test if time profiler decorator correstly dump profiling result to specified sources."""
     with raised_exception_ctx:        
+        # for testing valid (commo storage) and inlvalid storages cases
         if decorator_kwargs['storages']  == COMMON_STORAGE:
             decorator_kwargs['storages'] = common_storage
             

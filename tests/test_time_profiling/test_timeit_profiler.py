@@ -1,10 +1,10 @@
 """Tests for timeit_profiler module."""
 
-import pytest
 import time
 import contextlib
 
 import pydantic
+import pytest
 
 from python_profiling.time_profiling import timeit_profiler
 from Internals import exceptions
@@ -34,7 +34,6 @@ def test_TimeItProfiler(
     with raised_exception:
         profiler = timeit_profiler.TimeItProfiler(timer=timer, number=number, repeat=repeat)
         result = profiler.profile(func=func, **kwargs)
-        
         assert result.profiler == profiler
         assert result.profiled_func == func
         assert result.func_kwargs == kwargs

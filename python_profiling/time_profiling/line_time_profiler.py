@@ -52,7 +52,7 @@ class LineTimeProfiler:
         """
         line_profiler_ = cls._init_line_profiler()
         
-        with context_managers.LineTimeProfilerManager(line_profiler_=line_profiler_, profiled_func=func) as line_time_profiler_manager:
+        with context_managers.LineTimeProfilerManager(profiler=line_profiler_, profiled_func=func) as line_time_profiler_manager:
             profiling_result = func(**kwargs)
         
         return time_profiling_results.LineTimeProfilerResult(

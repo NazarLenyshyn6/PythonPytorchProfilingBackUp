@@ -15,6 +15,7 @@ from python_profiling.time_profiling import time_profiler as time_profiler_
 from python_profiling.time_profiling import timeit_profiler
 from python_profiling.time_profiling import time_profiling_results
 from python_profiling.time_profiling import line_time_profiler
+from python_profiling.time_profiling import call_graph_time_profiler
 from Internals import checks
 from Internals import observers
 from Internals.logger import logger
@@ -22,6 +23,24 @@ from Internals.logger import logger
 
 class BaseProfilingDecorator:
     """Provides shared functionality for all profiling decorators."""
+    
+    @checks.ValidateType(
+        [
+            ('storages', python_profiling_configs.StorageConfig), 
+            ('observer', observers.ProfilingObserverI)
+            ]
+        )
+    def _init_observer(
+        self, 
+        storages: python_profiling_configs.StorageConfig, 
+        observer:  observers.ProfilingObserverI
+        ):
+        """Validate storagest, observer types, if correct initialize observer instance.
+        
+        Raises:
+            InvalidInputType: If storages or observer of incorrect type.
+        """
+        self.observer = observer(storages=storages)
     
     @staticmethod
     def base_profiling__call__(func: Callable, profiling_func: Callable, observing_func: Callable):
@@ -90,6 +109,7 @@ class TimeProfilerDecorator(pydantic.BaseModel, TimeProfilingDecoratorI, BasePro
         obaserver (ProfilingObserver): A class that responsible for storing profiling result to 
         multiple sources.
     """
+    
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
     
     _avaliable_time_profilers: ClassVar[dict[python_profiling_enums.TimeProfilerStrategy, time_profiler_.TimeProfilerI]] = {
@@ -103,7 +123,7 @@ class TimeProfilerDecorator(pydantic.BaseModel, TimeProfilingDecoratorI, BasePro
     time_profiler_strategy: python_profiling_enums.TimeProfilerStrategy = pydantic.Field(default=python_profiling_enums.TimeProfilerStrategy.BASIC)
     storages: python_profiling_configs.StorageConfig = pydantic.Field(default_factory=python_profiling_configs.StorageConfig)
     time_profiler: time_profiler_.TimeProfilerI = pydantic.Field(init=False, default=None)
-    observer: observers.ProfilingObserver = pydantic.Field(init=False, default=None)
+    observer: observers.ProfilingObserverI = pydantic.Field(init=False, default=None)
     
     def model_post_init(self, __context):
         """Setup time profiler and observer based on provided profiling stragedy and storages."""
@@ -147,7 +167,7 @@ class TimeProfilerDecorator(pydantic.BaseModel, TimeProfilingDecoratorI, BasePro
             observing_func=self.observer.dump
             )
         
-class TimeItProfilerDecorator(pydantic.BaseModel, BaseProfilingDecorator):
+class TimeItProfilerDecorator(BaseProfilingDecorator):
     """Decorator for time profiling with timeit module.
     
     Attributes:            
@@ -160,24 +180,19 @@ class TimeItProfilerDecorator(pydantic.BaseModel, BaseProfilingDecorator):
         multiple sources.
     """
     
-    model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
-    
-    timer: FunctionType | BuiltinFunctionType = pydantic.Field(default=time.perf_counter)
-    number: int = pydantic.Field(default=10000)
-    repeat: int = pydantic.Field(default=1)
-    storages: python_profiling_configs.StorageConfig = pydantic.Field(default_factory=python_profiling_configs.StorageConfig)
-    time_profiler: timeit_profiler.TimeItProfiler = pydantic.Field(init=False, default=None)
-    observer: observers.ProfilingObserver = pydantic.Field(init=False, default=None)
-    
-    
-    def model_post_init(self, __context):
-        """Setup time profiler and observer based on provided profiling stragedy and storages."""
-        self.time_profiler = timeit_profiler.TimeItProfiler(timer=self.timer,
-                                                            number=self.number,
-                                                            repeat=self.repeat)
+    def __init__(
+        self, 
+        timer: FunctionType | BuiltinFunctionType = time.perf_counter,
+        number: int = 10000,
+        repeat: int = 1,
+        storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig,
+        observer: observers.ProfilingObserverI = observers.ProfilingObserver
+        ):
+        self.time_profiler = timeit_profiler.TimeItProfiler(timer=timer,
+                                                            number=number,
+                                                            repeat=repeat)
+        self._init_observer(storages=storages, observer=observer)
         
-        self.observer = observers.ProfilingObserver(storages=self.storages)
-    
     def __call__(self, func: Callable) -> Callable:
         return self.base_profiling__call__(
             func=func,
@@ -185,8 +200,7 @@ class TimeItProfilerDecorator(pydantic.BaseModel, BaseProfilingDecorator):
             observing_func=self.observer.dump
             )
         
-        
-class LineTimeProfilerDecorator(pydantic.BaseModel, BaseProfilingDecorator):
+class LineTimeProfilerDecorator(BaseProfilingDecorator):
     """Decorator for time profiling with line_profiler module.
     
     Attributes:
@@ -194,14 +208,12 @@ class LineTimeProfilerDecorator(pydantic.BaseModel, BaseProfilingDecorator):
         obaserver (ProfilingObserver): A class that responsible for storing profiling result to.
 
     """
-    model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
-    
-    storages: python_profiling_configs.StorageConfig = pydantic.Field(default_factory=python_profiling_configs.StorageConfig)
-    observer: observers.ProfilingObserver = pydantic.Field(init=False, default=None)
-    
-    def model_post_init(self, __context):
-        """Setup observer based on provided storages."""
-        self.observer = observers.ProfilingObserver(storages=self.storages)
+    def __init__(
+        self, 
+        storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig, 
+        observer: observers.ProfilingObserverI = observers.ProfilingObserver
+        ):
+        self._init_observer(storages=storages,observer=observer)
         
     def __call__(self, func: Callable) -> Callable:
         return self.base_profiling__call__(
@@ -209,5 +221,44 @@ class LineTimeProfilerDecorator(pydantic.BaseModel, BaseProfilingDecorator):
             profiling_func=line_time_profiler.LineTimeProfiler.profile,
             observing_func=self.observer.dump
         )
+        
+class CallGraphTimeProfilerDecorator(BaseProfilingDecorator):
+    """Decorator for time profiling with line_profiler module.
+    
+    Attributes:
+        sort_key (str): Metric to sort by (e.g., 'cumulative', 'time', etc.).
+        func_filter (str | None): Optional function name to filter profiling output.
+        top_n (int): Number of top entries to show in the profiling output.
+        storages (StorageConfig): Data Transfer Object that contains all configured output destinations.
+        obaserver (ProfilingObserver): A class that responsible for storing profiling result to.
+        
+    Raises:
+        ValidationError: If sort_key, func_filter, top_n has incorrect type.
+        InvalidInputError: If storages or observer has incorrect type.
+    """
+    def __init__(
+        self, 
+        sort_key: str = 'cumulative', 
+        func_filter: str = '', 
+        top_n: int = 10,
+        storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig(),
+        observer:  observers.ProfilingObserverI =  observers.ProfilingObserver
+        ):
+        self.sort_key = sort_key
+        self.func_filter = func_filter
+        self.top_n = top_n
+        self._init_observer(storages=storages, observer=observer)
+        self.profiler = call_graph_time_profiler.CallGraphTimeProfiler(sort_key=self.sort_key,
+                                                                       func_filter=self.func_filter,
+                                                                       top_n=self.top_n)
+        
+    def __call__(self, func: Callable) -> Callable:
+        return self.base_profiling__call__(
+            func=func,
+            profiling_func=self.profiler.profile,
+            observing_func=self.observer.dump
+        )
+        
+    
     
     

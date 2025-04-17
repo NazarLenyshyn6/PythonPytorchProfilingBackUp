@@ -42,13 +42,11 @@ class BaseTimeProfilingResult:
             context
             ) # might be removed
      
-    
     def remove_context(self, context_element: Any) -> None:
         """Removes a key from the profiling context."""
         if context_element in self.__dict__:
             del self.__dict__[context_element]
             logger.info('context %s has been removed from profiling data', context_element)
-            
             
     def dump(
         self, 
@@ -170,7 +168,7 @@ class LineTimeProfilerResult(BaseTimeProfilingResult):
     profiled_func: BuiltinFunctionType | FunctionType
     func_kwargs: dict
     func_result: Any
-    func_profiling_result: str
+    func_profiling_result: str | None
     func_exception: str | None = None
     
     def __str__(self) -> str:
@@ -178,10 +176,42 @@ class LineTimeProfilerResult(BaseTimeProfilingResult):
                 f"Profiled Function: {self.profiled_func.__name__}\n"
                 f"Function Kwargs: {self.func_kwargs}\n"
                 f"Function Result: {self.func_result}\n"
-                f"Function Profiling Result: {self.func_profiling_result}"
+                f"Function Profiling Result: {self.func_profiling_result}\n"
                 f"Function Exceptions: {self.func_exception}")
         
     def __repr__(self) -> str:
         return f'LineTimeProfilerResult(profiler={self.profiler.__class__.__name__}, profiled_func={self.profiled_func})'
-     
+    
+    
+@dataclass
+class CallGraphTimeProfilerResult(BaseTimeProfilingResult):
+    """Structured profiling result for time profiling with call_graph_time_profiler module.
+    
+    Attributes:
+        profiler: An instance of LineProfiler.
+        profiled_func: Profiled function.
+        func_kwargs: Keyword arguments of profiled function.
+        func_result: Profiled function result.
+        func_profiling_result: Structured profiling result.
+        func_exception: Exception raised during execution, if any.
+    """
+    
+    
+    profiler: Type
+    profiled_func: BuiltinFunctionType | FunctionType
+    func_kwargs: dict
+    func_result: Any
+    func_profiling_result: str | None
+    func_exception: str |  None  = None
+    
+    def __str__(self) -> str:
+        return (f"Profiler: {self.profiler}\n"
+                f"Profiled Function: {self.profiled_func.__name__}\n"
+                f"Function Kwargs: {self.func_kwargs}\n"
+                f"Function Result: {self.func_result}\n"
+                f"Function Profiling Result: {self.func_profiling_result}\n"
+                f"Function Exceptions: {self.func_exception}")
+        
+    def __repr__(self) -> str:
+        return f"CallGrapthTimeProfilerResult(profiler={self.profiler.__class__.__name__}, profiled_func={self.profiled_func})"
     

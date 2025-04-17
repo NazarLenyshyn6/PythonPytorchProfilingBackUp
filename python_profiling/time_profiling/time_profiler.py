@@ -79,7 +79,6 @@ class ThreadBasedTimeProfiler(TimeProfilerI):
         Raises:
             InvalidInputTypeError: If the function is not of the correct type.
         """
-        
         with TimeProfilerManager(profiling_timer=time.time) as time_profiler_manager:
             thread = threading.Thread(target=func, kwargs=kwargs)
             thread.start()

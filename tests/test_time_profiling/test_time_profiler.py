@@ -20,19 +20,17 @@ def test_TimeProfiler(
     kwargs, 
     func_result, 
     func_exception, 
-    check_time_profiling_result
     ):
     
     profiler = time_profiler.TimeProfiler(profiling_timer=profiling_timer)
     result = profiler.profile(func=func, **kwargs)
-    check_time_profiling_result(
-        result, 
-        profiler, 
-        func, 
-        kwargs, 
-        func_result, 
-        func_exception
-        )
+    assert result.profiler == profiler
+    assert result.profiled_func == func
+    assert result.func_args == None
+    assert result.func_kwargs == kwargs
+    assert result.func_result == func_result
+    assert type(result.func_execution_time) == float
+    assert result.func_exception == func_exception
     
     
 @pytest.mark.parametrize(
@@ -47,15 +45,12 @@ def test_ThreadBasedTimeProfiler(
     kwargs,
     func_result,
     func_exception,
-    check_time_profiling_result
     ):
-    
     result = time_profiler.ThreadBasedTimeProfiler.profile(func=func, **kwargs)
-    check_time_profiling_result(
-        result, 
-        time_profiler.ThreadBasedTimeProfiler, 
-        func, 
-        kwargs, 
-        func_result, 
-        func_exception
-        )
+    assert result.profiler == time_profiler.ThreadBasedTimeProfiler
+    assert result.profiled_func == func
+    assert result.func_args == None
+    assert result.func_kwargs == kwargs
+    assert result.func_result == func_result
+    assert type(result.func_execution_time) == float
+    assert result.func_exception == func_exception

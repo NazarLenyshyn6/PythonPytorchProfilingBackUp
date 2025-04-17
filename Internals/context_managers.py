@@ -5,31 +5,22 @@ from typing import Callable
 from types import BuiltinFunctionType, FunctionType
 
 import line_profiler
-        
-class BaseProfilerManager:   
-    """Base context manager for safe profiling processes."""
-    
-    def __enter__(self):
-        """Enter context."""
-        return self
-    
-    def __exit__(self, exc_type, exc_value, traceback):
-        """Handle exceptions if occurs.
-        
-        Args:
-            exc_type: The type of the exception.
-            exc_value: The type of the exception.
-            traceback: The traceback object.
-        
-        Returns:
-            bool: Always returns True to suppress exceptions.
-        """
-        self.exception = True if exc_type else False
-        self.func_exception = exc_type if exc_type else None
-        return True
-            
+import cProfile
 
-class TimeProfilerManager(BaseProfilerManager):
+CALL_GRAPH_PROFILING_RESULT_FILE = 'result.prof'
+
+
+def profiler_manager_base_exception_handling(obj, exc_type):
+    """Expetion handling that is common accross all profilers.
+    
+    Args:
+        obj: Instance of profiling context manager.
+        exc_type: The type of the exception.
+    """
+    obj.exception = True if exc_type else False
+    obj.func_exception = exc_type if exc_type else None
+    
+class TimeProfilerManager:
     """Context manager for profiling processes of classes that inherets from TimeProfilerI class.
     
     Args:
@@ -61,33 +52,81 @@ class TimeProfilerManager(BaseProfilerManager):
         """
         self.profiling_stop = self.profiling_timer()
         self.func_execution_time = self.profiling_stop - self.profiling_start
-        super().__exit__(exc_type, exc_value, traceback)
+        profiler_manager_base_exception_handling(self, exc_type)
         return True
     
     def __repr__(self) -> str:
         return f'TimeProfilingManager(profiling_timer={self.profiling_timer})'
     
-
-class LineTimeProfilerManager(BaseProfilerManager):
+    
+class TimeItProfilerManager:
+    """Context manager for profiling process of  TimeItProfiler class."""
+    
+    def __enter__(self):
+        """Enters context."""
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback) -> bool:
+        """Stops  profiling and handle exceptions if occurs.
+        
+        Args:
+            exc_type: The type of the exception.
+            exc_value: The exception instance.
+            traceback: The traceback object.
+        
+        Returns:
+            bool: Always returns True to suppress exceptions.
+        """
+        profiler_manager_base_exception_handling(self, exc_type)
+        return True
+    
+class LineTimeProfilerManager:
     """Context manager for profiling process of  LineTimeProfiler class."""
     
     def __init__(
         self, 
-        line_profiler_ : line_profiler.LineProfiler, 
+        profiler : line_profiler.LineProfiler, 
         profiled_func: BuiltinFunctionType | FunctionType
         ):
-        self.line_profiler_ = line_profiler_
+        self.profiler = profiler
         self.profiled_func = profiled_func
         
     def __enter__(self):
-        self.line_profiler_.add_function(self.profiled_func)
-        self.line_profiler_.enable_by_count()
+        self.profiler.add_function(self.profiled_func)
+        self.profiler.enable_by_count()
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):
-        self.line_profiler_.disable_by_count()
-        super().__exit__(exc_type, exc_value, traceback)
+        self.profiler.disable_by_count()
+        profiler_manager_base_exception_handling(self, exc_type)
         return True
+    
+class CallGraphTimeProfilerManager:
+    """Context manager for profiling process of  CallGraphTimeProfiler class."""
+    
+    def __enter__(self):
+        """Start the profiler."""
+        self.profiler = cProfile.Profile()
+        self.profiler.enable()
+        return self
+        
+    def __exit__(self, exc_type, exc_value, traceback):
+        """Stop the profiler and dump stats if no exception occurred.
+
+        Args:
+            exc_type (Type[BaseException] | None): Exception class if raised.
+            exc_value (BaseException | None): The exception instance.
+            traceback (TracebackType | None): Traceback if exception occurred.
+
+        Returns:
+            bool: True to suppress exceptions.
+        """
+        self.profiler.disable()
+        if not exc_type: 
+            self.profiler.dump_stats(CALL_GRAPH_PROFILING_RESULT_FILE)
+        profiler_manager_base_exception_handling(self, exc_type)
+        return True
+
         
     
 
