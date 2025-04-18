@@ -7,6 +7,8 @@ import pydantic
 
 from python_profiling.time_profiling import time_profiling_decorators
 from python_profiling.time_profiling import time_profiling_results
+from python_profiling.memory_profiling import memory_profiling_decorators
+from python_profiling.memory_profiling import memory_profiling_results
 from python_profiling import python_profiling_enums
 
 from python_profiling.python_profiling_configs import StorageConfig
@@ -114,15 +116,17 @@ INVALID_STRATEGY = 'invalid_strategy'
             time_profiling_results.TimeItProfilerResult
         ),
         (
-            time_profiling_decorators.TimeProfilerDecorator,
+            memory_profiling_decorators.PeakMemoryProfilerResultDecorator,
             {
-                'time_profiler_strategy': python_profiling_enums.TimeProfilerStrategy.BASIC, 
-                'storages': {COMMON_STORAGE}
-                },
+                'nframes': 1,
+                'key_type': 'lineno',
+                'top_n': 5,
+                'storages': COMMON_STORAGE
+            },
             lambda x: x + 1,
             {'x': 1},
-            pytest.raises(pydantic.ValidationError),
-            time_profiling_results.TimeProfilerResult
+            contextlib.nullcontext(),
+            memory_profiling_results.PeakMemoryProfilerResult
         ),
     ]
 )
