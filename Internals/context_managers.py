@@ -1,6 +1,7 @@
 """Custom context managers for profiling processes."""
 
 import timeit
+import tracemalloc
 from typing import Callable
 from types import BuiltinFunctionType, FunctionType
 
@@ -124,6 +125,38 @@ class CallGraphTimeProfilerManager:
         self.profiler.disable()
         if not exc_type: 
             self.profiler.dump_stats(CALL_GRAPH_PROFILING_RESULT_FILE)
+        profiler_manager_base_exception_handling(self, exc_type)
+        return True
+    
+    
+class PeakMemoryProfilerManager:
+    """Context manager for profiling process of  CallGraphTimeProfiler class.
+    
+    Attributes:
+        nframes: defines how many frames of traceback to record for each memory allocation.
+    """
+    
+    def __init__(self, nframes: int):
+        self.nframes = nframes
+        
+    def __enter__(self) -> 'PeakMemoryProfilerManager':
+        """starts memory allocation tracing and  takes a snapshot of all memory allocations currently being traced."""
+        tracemalloc.start(self.nframes)
+        self.allocation_before = tracemalloc.take_snapshot()
+        return self
+        
+    def __exit__(self, exc_type, exc_value,  traceback):
+        """Captures final memory snapshot and handles any exceptions.
+
+        Args:
+            exc_type: Exception type, if any.
+            exc_value: Exception instance, if any.
+            traceback: Traceback object, if any.
+
+        Returns:
+            bool: True to suppress exceptions (consider returning False unless intended).
+        """
+        self.allocation_after = tracemalloc.take_snapshot()
         profiler_manager_base_exception_handling(self, exc_type)
         return True
 

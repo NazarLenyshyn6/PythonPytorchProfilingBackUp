@@ -16,58 +16,10 @@ from python_profiling.time_profiling import timeit_profiler
 from python_profiling.time_profiling import time_profiling_results
 from python_profiling.time_profiling import line_time_profiler
 from python_profiling.time_profiling import call_graph_time_profiler
+from python_profiling import _base_profiling_decorators
 from Internals import checks
 from Internals import observers
 from Internals.logger import logger
-
-
-class BaseProfilingDecorator:
-    """Provides shared functionality for all profiling decorators."""
-    
-    @checks.ValidateType(
-        [
-            ('storages', python_profiling_configs.StorageConfig), 
-            ('observer', observers.ProfilingObserverI)
-            ]
-        )
-    def _init_observer(
-        self, 
-        storages: python_profiling_configs.StorageConfig, 
-        observer:  observers.ProfilingObserverI
-        ):
-        """Validate storagest, observer types, if correct initialize observer instance.
-        
-        Raises:
-            InvalidInputType: If storages or observer of incorrect type.
-        """
-        self.observer = observer(storages=storages)
-    
-    @staticmethod
-    def base_profiling__call__(func: Callable, profiling_func: Callable, observing_func: Callable):
-        """Decorator for profiling and storing profiling results.
-        
-        Args:
-            func (Callable): The original function to decorate.
-            profiling_func (Callable): A profiling function that wraps the target function.
-             observing_func (Callable): A function that handles storing of profiling result.
-             
-        Returns:
-            Callable: A wrapped function that runs profiling and stores the result.
-        """
-        @functools.wraps(func)
-        def wrapper(**kwargs) -> Callable:
-            """Profile provided function and stores profiling result.
-            
-            Args:
-            **kwargs: Keyword arguments to pass to the function.
-            
-            Returns:
-                object: Structured profiling result returned by the profiling function.
-            """
-            result = profiling_func(func=func, **kwargs)
-            observing_func(result)
-            return result
-        return wrapper
 
 
 class TimeProfilingDecoratorI(ABC):
@@ -99,7 +51,7 @@ class TimeProfilingDecoratorI(ABC):
             del cls._avaliable_time_profilers[profiler_name]
             logger.info('%s has been removed', profiler_name)
     
-class TimeProfilerDecorator(pydantic.BaseModel, TimeProfilingDecoratorI, BaseProfilingDecorator):
+class TimeProfilerDecorator(pydantic.BaseModel, TimeProfilingDecoratorI, _base_profiling_decorators.BaseProfilingDecorator):
     """Decorator for time profiling with time module.
     
     Attributes:
@@ -167,7 +119,7 @@ class TimeProfilerDecorator(pydantic.BaseModel, TimeProfilingDecoratorI, BasePro
             observing_func=self.observer.dump
             )
         
-class TimeItProfilerDecorator(BaseProfilingDecorator):
+class TimeItProfilerDecorator(_base_profiling_decorators.BaseProfilingDecorator):
     """Decorator for time profiling with timeit module.
     
     Attributes:            
@@ -200,7 +152,7 @@ class TimeItProfilerDecorator(BaseProfilingDecorator):
             observing_func=self.observer.dump
             )
         
-class LineTimeProfilerDecorator(BaseProfilingDecorator):
+class LineTimeProfilerDecorator(_base_profiling_decorators.BaseProfilingDecorator):
     """Decorator for time profiling with line_profiler module.
     
     Attributes:
@@ -222,7 +174,7 @@ class LineTimeProfilerDecorator(BaseProfilingDecorator):
             observing_func=self.observer.dump
         )
         
-class CallGraphTimeProfilerDecorator(BaseProfilingDecorator):
+class CallGraphTimeProfilerDecorator(_base_profiling_decorators.BaseProfilingDecorator):
     """Decorator for time profiling with line_profiler module.
     
     Attributes:

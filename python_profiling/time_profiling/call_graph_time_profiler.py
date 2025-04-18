@@ -3,6 +3,7 @@
 import io
 import os
 from types import BuiltinFunctionType, FunctionType
+from typing import Literal
 
 import pydantic
 import pstats
@@ -24,16 +25,10 @@ class CallGraphTimeProfiler(pydantic.BaseModel):
     
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
     
-    sort_key: str = pydantic.Field(default='cumulative')
-    func_filter: str = pydantic.Field(default=None)
+    sort_key: Literal['time', 'cumulative', 'calls', 'name', 'file', 'line']  = pydantic.Field(default='cumulative')
+    func_filter: str= pydantic.Field(default=None)
     top_n : int =  pydantic.Field(default=10)
     
-    @pydantic.model_validator(mode='after')
-    def validate_sort_key(self) -> 'CallGraphTimeProfiler':
-        """Validate corectness of provided sort key."""
-        if not self.sort_key in ('time', 'cumulative', 'calls', 'name', 'file', 'line'):
-            raise  ValueError('Invalid sort key, valid options: [time, cumulative, calls, name, file, line]')
-       
     def _profile_to_string(self, profile_file: str):
         """Load profiling result and output as a string.
         
