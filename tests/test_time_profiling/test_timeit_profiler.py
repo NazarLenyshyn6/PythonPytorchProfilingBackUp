@@ -1,5 +1,3 @@
-"""Tests for timeit_profiler module."""
-
 import time
 import contextlib
 

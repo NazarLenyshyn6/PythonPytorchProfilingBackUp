@@ -1,5 +1,3 @@
-"""Tests for time_profiling_decorators module."""
-
 import os
 import time
 import pytest

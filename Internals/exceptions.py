@@ -4,7 +4,7 @@ from typing import Any, Dict, Type
 
 
 class InvalidInputTypeError(Exception):
-    """Exception raised when an input argument has an invalid type.
+    """Input argument has an invalid type.
     
     Args:
         input_ (Any): The input value that failed the type check.
@@ -16,7 +16,7 @@ class InvalidInputTypeError(Exception):
         
         
 class MissingArgumentError(Exception):
-    """Exception raised when a required argument is missing.
+    """Required argument is missing.
     
     Args:
         missing_arg (str): The name of the argument that is missing.

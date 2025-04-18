@@ -1,5 +1,6 @@
 """Observers to save profiling results to multiple sources simultaneously."""
 
+from typing_extensions import override
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
@@ -16,7 +17,14 @@ class ProfilingObserverI(ABC):
         
     @abstractmethod
     def dump(self, result: time_profiling_results.BaseTimeProfilingResult) -> None:
-        ...
+        """Writes the profiling result to all configured storage sources.
+        
+        Args:
+            result (BaseTimeProfilingResult): The profiling result to persist.
+            
+        Returns: 
+            None
+        """
 
 @dataclass
 class ProfilingObserver(ProfilingObserverI):
@@ -27,15 +35,8 @@ class ProfilingObserver(ProfilingObserverI):
     """
     storages: python_profiling_configs.StorageConfig
     
+    @override
     def dump(self, result: time_profiling_results.BaseTimeProfilingResult) -> None:
-        """Writes the profiling result to all configured storage sources.
-        
-        Args:
-            result (BaseTimeProfilingResult): The profiling result to persist.
-            
-        Returns: 
-            None
-        """
         for serializer_strategy, file_path, mode in zip(self.storages.serializers_strategies, 
                                                         self.storages.file_paths, 
                                                         self.storages.modes):

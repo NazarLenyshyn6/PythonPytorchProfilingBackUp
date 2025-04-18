@@ -1,5 +1,3 @@
-"""Tests for line_time_profiler module."""
-
 import pytest
 
 from python_profiling.time_profiling import line_time_profiler

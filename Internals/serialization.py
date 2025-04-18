@@ -5,6 +5,7 @@ import inspect
 import json
 
 import yaml
+from typing_extensions import override
 
 from python_profiling import python_profiling_enums
 from Internals import checks
@@ -19,7 +20,13 @@ class SerializerI(ABC):
     @classmethod
     @abstractmethod
     def dump(cls, data: dict, file_path: str, mode: str):
-        ...
+        """Serializes the data to a file using specified format.
+        
+        Args:
+            data (dict): Data to serialize.
+            file_path (str): Output file path.
+            mode (str): File mode, default is 'w' (write).
+        """
         
         
 class JSONSerializer(SerializerI):
@@ -27,17 +34,8 @@ class JSONSerializer(SerializerI):
     
     @classmethod
     @execution_guards.serialization_handler('.json')
+    @override
     def dump(cls, data: dict, file_path: str, mode: str) -> None:
-        """Serializes the data to a file using JSON format.
-        
-        Args:
-            data (dict): Data to serialize.
-            file_path (str): Output file path.
-            mode (str): File mode, default is 'w' (write).
-            
-        Returns:
-            None
-        """
         with open(file_path, mode=mode) as f:
             json.dump(data, f, indent=4)
             
@@ -47,17 +45,8 @@ class TXTSerializer(SerializerI):
     
     @classmethod
     @execution_guards.serialization_handler('.txt')
+    @override
     def dump(cls, data: dict, file_path: str, mode: str):
-        """Serializes the data to a file using plain text format.
-        
-        Args:
-            data (dict): Data to serialize.
-            file_path (str): Output file path.
-            mode (str):  File mode, default is 'w' (write).
-            
-        Returns:
-            None
-        """
         with open(file_path, mode=mode) as f:
             for key, value in data.items():
                 f.write(f"{key}: {value}\n")
@@ -68,17 +57,8 @@ class YAMLSerializer(SerializerI):
     
     @classmethod
     @execution_guards.serialization_handler('.yaml')
+    @override
     def dump(cls, data: dict, file_path: str, mode: str):
-        """Serializes the data to a file using YAML format.
-        
-        Args:
-            data (dict): Data to serialize.
-            file_path (str): Output file path.
-            mode (str):  File mode, default is 'w' (write).
-            
-        Returns:
-            None
-        """
         with open(file_path, mode=mode) as f:
             yaml.safe_dump(data, f)    
       

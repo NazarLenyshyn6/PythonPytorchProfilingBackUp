@@ -1,5 +1,3 @@
-"""Tests for call_graph_line_profiler module."""
-
 import pytest
 import pydantic
 import contextlib

@@ -5,6 +5,7 @@ import threading
 from abc import ABC, abstractmethod
 from types import BuiltinFunctionType, FunctionType
 from typing import Callable
+from typing_extensions import override
 
 from python_profiling.time_profiling import time_profiling_results
 
@@ -18,20 +19,6 @@ class TimeProfilerI(ABC):
     
     @abstractmethod
     def profile(cls, func: BuiltinFunctionType | FunctionType, **kwargs) -> time_profiling_results.TimeProfilerResult:
-        ...
-        
-class TimeProfiler(TimeProfilerI):
-    """Time profiler that uses a specified timer from the time module.
-    
-    Attributes:
-        profiling_timer (Callable): Timer function used for profiling.
-    """
-    
-    def __init__(self, profiling_timer: Callable):
-        self.profilig_timer = profiling_timer
-        
-    @ValidateType(('func', (BuiltinFunctionType, FunctionType)))
-    def profile(self, func: BuiltinFunctionType | FunctionType, **kwargs) -> time_profiling_results.TimeProfilerResult:
         """Profile the execution time of a function.
         
         Args:
@@ -44,6 +31,19 @@ class TimeProfiler(TimeProfilerI):
             InvalidInputTypeError: If the function is not of the correct type.
         """
         
+class TimeProfiler(TimeProfilerI):
+    """Time profiler that uses a specified timer from the time module.
+    
+    Attributes:
+        profiling_timer (Callable): Timer function used for profiling.
+    """
+    
+    def __init__(self, profiling_timer: Callable):
+        self.profilig_timer = profiling_timer
+        
+    @ValidateType(('func', (BuiltinFunctionType, FunctionType)))
+    @override
+    def profile(self, func: BuiltinFunctionType | FunctionType, **kwargs) -> time_profiling_results.TimeProfilerResult:        
         with TimeProfilerManager(profiling_timer=self.profilig_timer) as time_profiler_manager:
             profiling_result = func(**kwargs)
             
@@ -66,19 +66,9 @@ class ThreadBasedTimeProfiler(TimeProfilerI):
     
     @classmethod
     @ValidateType(('func', (BuiltinFunctionType, FunctionType)))
+    @override
     def profile(cls, func: BuiltinFunctionType | FunctionType, **kwargs) -> time_profiling_results.TimeProfilerResult:
-        """Profile the execution time of a function in a separate thread.
-        
-        Args:
-            func (BuiltinFunctionType | FunctionType): Function to profile.
-            **kwargs: Keyword arguments to pass to the function.
-            
-        Returns:
-            TimeProfilerResult: Structured profiling result.
-            
-        Raises:
-            InvalidInputTypeError: If the function is not of the correct type.
-        """
+        """Profile the execution time of a function in a separate thread."""
         with TimeProfilerManager(profiling_timer=time.time) as time_profiler_manager:
             thread = threading.Thread(target=func, kwargs=kwargs)
             thread.start()
