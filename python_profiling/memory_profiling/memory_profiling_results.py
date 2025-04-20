@@ -4,6 +4,7 @@ from typing import Type, Any
 from types import  BuiltinFunctionType, FunctionType
 from dataclasses import dataclass
 import tracemalloc
+import pympler.tracker
 
 from python_profiling import _base_profiling_result
 
@@ -66,6 +67,43 @@ class PeakMemoryProfilerResult(_base_profiling_result.BaseProfilingResult):
         
     def __repr__(self) -> str:
         return f'PeakMemoryProfilerResult(profiler={self.profiler.__class__.__name__}, profiled_func={self.profiled_func.__name__})'
+    
+
+@dataclass
+class ObjectAllocationProfilerResult(_base_profiling_result.BaseProfilingResult):
+    """Structured profiling result for memory profiling with pympler module.
+    
+    Attributes:
+        profiler: ObjectAllocationProfilerResult.
+        profiled_func: Profiled function.
+        func_kwargs: Keyword arguments of profiled funciton.
+        func_result: Profiled function result.
+        tracker: Instance of pympler.tracker.SummaryTracker tracking memory usage over time.
+        before_memory_allocation: Snapshot-based memory before function execution.
+        after_memory_allocation: Snapshot-based memory after function execution.
+        func_exception: Exception raised during execution, if any.
+    """
+    profiler: Type
+    profiled_func: BuiltinFunctionType | FunctionType
+    func_kwargs: dict
+    func_result: Any
+    tracker: pympler.tracker.SummaryTracker
+    before_memory_allocation: str
+    after_memory_allocation: str
+    func_exception: str | None = None
+    
+    def __str__(self) -> str:
+        return (f"Profiler: {self.profiler}\n"
+                f"Profiled Function: {self.profiled_func.__name__}\n"
+                f"Function Kwargs: {self.func_kwargs}\n"
+                f"Function Result: {self.func_result}\n"
+                f"Tracker: {self.tracker}\n"
+                f"Before memory allocation: {self.before_memory_allocation}"
+                f"After memory allocation: {self.after_memory_allocation}"
+                f"Function Exception: {self.func_exception or 'None'}")
+    
+    def __repr__(self) -> str:
+        return f'ObjectAllocationProfilerResult(profiler={self.profiler.__name__}, profiled_func={self.profiled_func.__name__})'
         
     
 

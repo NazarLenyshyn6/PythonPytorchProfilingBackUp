@@ -24,6 +24,10 @@ class BaseProfilingDecorator:
         ):
         """Validate storagest, observer types, if correct initialize observer instance.
         
+        Args:
+            storages: Instance of StorageConfig.
+            observer: Class that implements ProfilingObserverI interface.
+        
         Raises:
             InvalidInputType: If storages or observer of incorrect type.
         """

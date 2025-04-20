@@ -128,6 +128,16 @@ INVALID_STRATEGY = 'invalid_strategy'
             contextlib.nullcontext(),
             memory_profiling_results.PeakMemoryProfilerResult
         ),
+        (
+            memory_profiling_decorators.ObjectAllocationProfilerDecorator,
+            {
+                'storages': COMMON_STORAGE
+            },
+            lambda x: x + 1,
+            {'x': 1},
+            contextlib.nullcontext(),
+            memory_profiling_results.ObjectAllocationProfilerResult
+        ),
     ]
 )
 def test_time_profiler_decorator(

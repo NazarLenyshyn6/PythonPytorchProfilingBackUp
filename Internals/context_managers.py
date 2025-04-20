@@ -1,5 +1,7 @@
 """Custom context managers for profiling processes."""
 
+import io
+import sys
 import timeit
 import tracemalloc
 from typing import Callable
@@ -7,6 +9,7 @@ from types import BuiltinFunctionType, FunctionType
 
 import line_profiler
 import cProfile
+import pympler.tracker
 
 CALL_GRAPH_PROFILING_RESULT_FILE = 'result.prof'
 
@@ -157,6 +160,39 @@ class PeakMemoryProfilerManager:
             bool: True to suppress exceptions (consider returning False unless intended).
         """
         self.allocation_after = tracemalloc.take_snapshot()
+        profiler_manager_base_exception_handling(self, exc_type)
+        return True
+    
+class ObjectAllocationProfilerManager:
+    """Context manager for profiling process of  ObjectAllocationProfiler class."""
+    
+    def __enter__(self):
+        """Capture memory allocation before function call and redirect stdout."""
+        self.tracker = pympler.tracker.SummaryTracker()
+        # Redirect stdout to capture the print output
+        self._old_stdout = sys.stdout
+        sys.stdout = self._temp_stdout = io.StringIO()
+
+        self.tracker.print_diff()
+
+        self.before_memory_allocation = self._temp_stdout.getvalue()
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        """Capture memory allocation before function call and redirect stdout to default state
+        
+        Args:
+            exc_type: Exception type, if any.
+            exc_value: Exception instance, if any.
+            traceback: Traceback object, if any.
+
+        Returns:
+            bool: True to suppress exceptions (consider returning False unless intended).
+        """
+        self.tracker.print_diff()
+        self.after_memory_allocation = self._temp_stdout.getvalue()
+        # Reset stdout
+        sys.stdout = self._old_stdout
         profiler_manager_base_exception_handling(self, exc_type)
         return True
 
