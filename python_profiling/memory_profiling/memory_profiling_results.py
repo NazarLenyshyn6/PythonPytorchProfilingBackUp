@@ -74,7 +74,7 @@ class ObjectAllocationProfilerResult(_base_profiling_result.BaseProfilingResult)
     """Structured profiling result for memory profiling with pympler module.
     
     Attributes:
-        profiler: ObjectAllocationProfilerResult.
+        profiler: ObjectAllocationProfiler.
         profiled_func: Profiled function.
         func_kwargs: Keyword arguments of profiled funciton.
         func_result: Profiled function result.
@@ -104,6 +104,52 @@ class ObjectAllocationProfilerResult(_base_profiling_result.BaseProfilingResult)
     
     def __repr__(self) -> str:
         return f'ObjectAllocationProfilerResult(profiler={self.profiler.__name__}, profiled_func={self.profiled_func.__name__})'
+    
+    
+@dataclass
+class LineMemoryProfilerResult(_base_profiling_result.BaseProfilingResult):
+    """Structured profiling result for memory profiling with memory_profiler module.
+    
+    Attributes:
+        profiler: LineMemoryProfiler.
+        profiled_func: Profiled function.
+        func_kwargs: Keyword arguments of profiled funciton.
+        func_result: Profiled function result.
+        start_memory: amount of memory (in MiB) used before the function starts executing.
+        peak_memory: The maximum memory observed during the function’s runtime, including any 
+            spikes due to object creation, temporary data, etc.
+        end_memory: The memory after the function finishes running..
+        max_memory_increase: Net increase in memory usage during the execution, from baseline to the highest point.
+        memory_timeline: Memory usage over time.
+        func_exception: Exception raised during execution, if any.
+    """
+    profiler: Type
+    profiled_func: BuiltinFunctionType | FunctionType
+    func_kwargs: dict
+    func_result: Any
+    start_memory: int | float
+    peak_memory: int | float
+    end_memory: int | float
+    max_memory_increase: int | float
+    memory_timeline: list[int | float]
+    func_exception: str | None = None
+    
+    def __str__(self) -> str:
+        return (f"Profiler: {self.profiler}\n"
+                f"Profiled Function: {self.profiled_func.__name__}\n"
+                f"Function Kwargs: {self.func_kwargs}\n"
+                f"Function Result: {self.func_result}\n"
+                f"Start Memory: {self.start_memory} MiB\n"
+                f"Peak Memory: {self.peak_memory} MiB\n"
+                f"End memory: {self.end_memory} MiB\n"
+                f"Max memory increase: {self.max_memory_increase} MiB\n"
+                f"Memory timeline: {self.memory_timeline}\n"
+                f"Function Exception: {self.func_exception or 'None'}")
+    
+    def __repr__(self) -> str:
+        return f'LineMemoryProfilerResult(profiler={self.profiler.__name__}, profiled_func={self.profiled_func.__name__})'
+    
+    
         
     
 

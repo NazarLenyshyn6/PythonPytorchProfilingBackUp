@@ -19,6 +19,9 @@ class PeakMemoryProfiler(pydantic.BaseModel):
         nframes: Number of stack frames to include in each memory trace.
         key_type: Sorting method for snapshot comparisons.
         top_n: .
+        
+    Raises:
+        ValidationError: If attribute of wrong type.
     """
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
     

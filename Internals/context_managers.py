@@ -195,6 +195,15 @@ class ObjectAllocationProfilerManager:
         sys.stdout = self._old_stdout
         profiler_manager_base_exception_handling(self, exc_type)
         return True
+    
+class LineMemoryProfilerManager:
+    def __enter__(self):
+        """Enters context."""
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        profiler_manager_base_exception_handling(self, exc_type)
+        return True
 
         
     

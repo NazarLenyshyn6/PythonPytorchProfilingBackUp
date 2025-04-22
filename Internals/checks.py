@@ -32,7 +32,7 @@ class ValidateType:
         for arg, _ in expected_type:
             if not arg in provided_type:
                 raise exceptions.MissingArgumentError(arg)
-                    
+              
     def __call__(self, func: Callable) -> Callable:
         """Decorator call method that applies validation logic."""
         @functools.wraps(func)
