@@ -9,9 +9,8 @@ from Internals import checks
 from Internals.logger import logger
 
 
-
 class BaseProfilingResult:
-    """Defines functionality that is common across all profilers."""
+    """Defines functionality that is common across all profiling results."""
     
     @property
     def profiling_data(self):

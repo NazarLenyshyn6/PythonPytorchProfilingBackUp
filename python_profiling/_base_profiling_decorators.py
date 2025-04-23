@@ -19,8 +19,8 @@ class BaseProfilingDecorator:
         )
     def _init_observer(
         self, 
-        storages: python_profiling_configs.StorageConfig, 
-        observer:  observers.ProfilingObserverI
+        storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig(), 
+        observer:  observers.ProfilingObserverI = observers.ProfilingObserver
         ):
         """Validate storagest, observer types, if correct initialize observer instance.
         
