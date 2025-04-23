@@ -10,6 +10,8 @@ from python_profiling.time_profiling import time_profiling_results
 from python_profiling.memory_profiling import memory_profiling_decorators
 from python_profiling.memory_profiling import memory_profiling_results
 from python_profiling import python_profiling_enums
+from python_profiling.composed_profiling import composed_profiler
+from python_profiling.composed_profiling import composed_profiling_results
 
 from python_profiling.python_profiling_configs import StorageConfig
 
@@ -147,6 +149,16 @@ INVALID_STRATEGY = 'invalid_strategy'
             {'x': 1},
             contextlib.nullcontext(),
             memory_profiling_results.LineMemoryProfilerResult
+        ),
+        (
+            composed_profiler.ComposedProfiler,
+            {   
+                'storages': COMMON_STORAGE
+            },
+            lambda x: x + 1,
+            {'x': 1},
+            contextlib.nullcontext(),
+            composed_profiling_results.ComposedProfilerResult
         ),
     ]
 )
