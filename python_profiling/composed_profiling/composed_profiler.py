@@ -24,7 +24,8 @@ class ComposedProfilerI(ABC, _base_profiling_decorators.BaseProfilingDecorator):
         composed_profiling_config: python_profiling_configs.ComposedProfilingConfig = 
         python_profiling_configs.ComposedProfilingConfig(
             time_profiling_strategy=python_profiling_enums.TimeProfilingStrategy.LINE_TIME_PROFILER,
-            memory_profiling_strategy=python_profiling_enums.MemoryProfilingStrategy.OBJECT_ALLOCATION_PROFILER
+            memory_profiling_strategy=python_profiling_enums.MemoryProfilingStrategy.OBJECT_ALLOCATION_PROFILER,
+            call_graph_profiling_strategy=python_profiling_enums.CallGraphProfilingStrategy.CALL_GRAPH_PROFILER
             ),
         storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig(),
         observer: observers.ProfilingObserverI = observers.ProfilingObserver

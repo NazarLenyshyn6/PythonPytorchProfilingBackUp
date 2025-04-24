@@ -14,6 +14,7 @@ from python_profiling.memory_profiling import (
     object_allocation_profiler,
     line_memory_profiler
     )
+from python_profiling.call_graph_profiling import call_graph_profiler
 from Internals import checks
 from Internals import execution_guards
 from Internals.logger import logger
@@ -70,7 +71,7 @@ class ComposedProfilingConfig:
         time_profiler (object): Initialized time profiler instance.
         memory_profiler (object): Initialized memory profiler instance.
     """
-    _avaliable_profilers = {
+    _available_profilers = {
         python_profiling_enums.ProfilingType.TIME_PROFILING: {
             python_profiling_enums.TimeProfilingStrategy.TIME_PROFILER: time_profiler.TimeProfiler, 
             python_profiling_enums.TimeProfilingStrategy.TIMEIT_PROFILER: timeit_profiler.TimeItProfiler,
@@ -83,28 +84,32 @@ class ComposedProfilingConfig:
             python_profiling_enums.MemoryProfilingStrategy.LINE_MEMORY_PROFILER: line_memory_profiler.LineMemoryProfiler
             },
         python_profiling_enums.ProfilingType.CALL_GRAPH_PROFILING: {
-            '', 
-            ''
+            python_profiling_enums.CallGraphProfilingStrategy.CALL_GRAPH_PROFILER: call_graph_profiler.CallGraphProfiler, 
             }
         }
     @checks.ValidateType([
         ('time_profiling_strategy', python_profiling_enums.TimeProfilingStrategy),
         ('memory_profiling_strategy', python_profiling_enums.MemoryProfilingStrategy),
+        ('call_graph_profiling_strategy',  python_profiling_enums.CallGraphProfilingStrategy)
     ])
     def __init__(
         self, 
         time_profiling_strategy: python_profiling_enums.TimeProfilingStrategy,
         memory_profiling_strategy: python_profiling_enums.MemoryProfilingStrategy,
+        call_graph_profiling_strategy: python_profiling_enums.CallGraphProfilingStrategy,
         time_profiling_strategy_params: dict = None,
-        memory_profiling_strategy_params: dict = None
+        memory_profiling_strategy_params: dict = None,
+        call_graph_profiling_strategy_params: dict = None
         ):
         """Initializes the composed profiling configuration.
 
         Args:
             time_profiling_strategy: Strategy for time profiling.
             memory_profiling_strategy: Strategy for memory profiling.
+            call_graph_profiling_strategy: Strategy for call graph profiling.
             time_profiling_strategy_params: Parameters to initialize time profiler.
             memory_profiling_strategy_params: Parameters to initialize memory profiler.
+            call_graph_profiling_strategy_params: Parameters to initialize call graph profiler.
         """
     
         def _initialize_profiler(profiler, profiler_params):
@@ -125,6 +130,11 @@ class ComposedProfilingConfig:
                     memory_profiling_strategy
                 ),
                 memory_profiling_strategy_params)
+            self.call_graph_profiler = _initialize_profiler(
+                self.get_profiler(
+                    python_profiling_enums.ProfilingType.CALL_GRAPH_PROFILING,
+                    call_graph_profiling_strategy),
+                call_graph_profiling_strategy_params)
             
         except Exception as e:
             logger.info(
@@ -135,7 +145,8 @@ class ComposedProfilingConfig:
     def __iter__(self):
         return iter((
             self.time_profiler,
-            self.memory_profiler
+            self.memory_profiler,
+            self.call_graph_profiler
         ))
         
     def get_profiler(
@@ -156,17 +167,17 @@ class ComposedProfilingConfig:
             TypeError: If profiling_type or strategy is invalid.
         """
         
-        if not profiling_type in self._avaliable_profilers:
+        if not profiling_type in self._available_profilers:
             raise TypeError(
                 "Invalid Profiling Type. Valid options: TIME_PROFILING, MEMORY_PROFILING."
             )
-        profilers = self._avaliable_profilers[profiling_type]
+        profilers = self._available_profilers[profiling_type]
         if not profiling_strategy in profilers:
             raise TypeError("Invalid Profiling Strategy for given profiling type.")
         profiler = profilers[profiling_strategy]
         return profiler
     
-    def add_profiler(
+    def _add_profiler(
         self, 
         profiling_type: python_profiling_enums.ProfilingType, 
         profiling_strategy: python_profiling_enums.TimeProfilingStrategy | python_profiling_enums.MemoryProfilingStrategy,
@@ -182,16 +193,16 @@ class ComposedProfilingConfig:
         Raises:
             TypeError: If profiling_type is invalid.
         """
-        if not profiling_type in self._avaliable_profilers:
+        if not profiling_type in self._available_profilers:
             raise TypeError("Invalid profiling type provided.")
-        self._avaliable_profilers[profiling_type][profiling_strategy] = profiler
+        self._available_profilers[profiling_type][profiling_strategy] = profiler
         
     @classmethod
     def avaliable_profilers(cls):
         """Returns all currently available profilers."""
-        for profiling_type in cls._avaliable_profilers:
+        for profiling_type in cls._available_profilers:
             print(f'Profiling type: {profiling_type}')
-            for profiler in cls._avaliable_profilers[profiling_type]:
+            for profiler in cls._available_profilers[profiling_type]:
                 print(f'    Profiler: {profiler}')
             print()
         

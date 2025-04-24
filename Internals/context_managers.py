@@ -108,6 +108,9 @@ class LineTimeProfilerManager:
 class CallGraphTimeProfilerManager:
     """Context manager for profiling process of  CallGraphTimeProfiler class."""
     
+    def __init__(self, output_file: str = CALL_GRAPH_PROFILING_RESULT_FILE):
+        self.output_file = output_file
+    
     def __enter__(self):
         """Start the profiler."""
         self.profiler = cProfile.Profile()
@@ -127,7 +130,7 @@ class CallGraphTimeProfilerManager:
         """
         self.profiler.disable()
         if not exc_type: 
-            self.profiler.dump_stats(CALL_GRAPH_PROFILING_RESULT_FILE)
+            self.profiler.dump_stats(self.output_file)
         profiler_manager_base_exception_handling(self, exc_type)
         return True
     

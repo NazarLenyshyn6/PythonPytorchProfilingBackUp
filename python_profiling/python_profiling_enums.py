@@ -44,3 +44,15 @@ class MemoryProfilingStrategy(enum.Enum):
     OBJECT_ALLOCATION_PROFILER = 'object_allocation_profiler'
     LINE_MEMORY_PROFILER = 'line_memory_profiler'
     
+class CallGraphProfilingStrategy(enum.Enum):
+    """Enumeration of existing call graph profiling options."""
+    
+    CALL_GRAPH_PROFILER = 'call graph profiler'
+    
+    
+class CallGraphVisualizers(enum.Enum):
+    """Enumeration of existing call graph visualizers."""
+    
+    GPROF2DOT = 'gprof2dot'
+    SNAKEVIZ = 'snakeviz'
+    
