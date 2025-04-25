@@ -1,3 +1,5 @@
+"""Structured pytorch profiling results."""
+
 from dataclasses import dataclass
 import datetime
 
@@ -5,11 +7,23 @@ from python_profiling import _base_profiling_result
 
 @dataclass
 class PyTorchProfilingResult(_base_profiling_result.BaseProfilingResult):
+    """Structured profiling result for pytorch profiling.
+    
+    Attributes:
+        trace_name (str): Unique name given to the profiling trace.
+        duration (int | float): Duration of the profiling session in seconds.
+        output_dir (str): Path to the directory containing trace logs.
+    """
     trace_name: str
     duration: int | float
     output_dir: str
     
     def __str__(self) -> str:
+        """Return a human-readable summary of the profiling session.
+
+        Returns:
+            str: Multi-line formatted string showing trace details and how to view it.
+        """
         summary = self.profiling_data
         return f"""PyTorch Profiling Result.
 

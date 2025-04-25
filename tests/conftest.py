@@ -10,6 +10,7 @@ pytest_plugins = [
     "tests.fixtures.file_fixtures",
     "tests.fixtures.profiling_results_fixtures",
     "tests.fixtures.serialization_fixture",
+    "tests.fixtures.pytorch_profiling_setup"
 ]
 
 
