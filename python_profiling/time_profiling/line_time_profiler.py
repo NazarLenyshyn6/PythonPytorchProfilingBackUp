@@ -13,6 +13,9 @@ from Internals import context_managers
 class LineTimeProfiler:
     """Time profiler based on line_profile module."""
     
+    def __repr__(self) -> str:
+        return f'LineTimeProfiler()'
+    
     @staticmethod
     def _init_line_profiler():
         """Initialize new instance ot LineProfiler class."""

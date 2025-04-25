@@ -9,6 +9,7 @@ from python_profiling import python_profiling_enums
 from python_profiling.call_graph_profiling import call_graph_visualization
 from python_profiling.call_graph_profiling import call_graph_profiling_results
 from Internals import context_managers
+from Internals.logger import logger
 
 class CallGraphProfilerI(ABC):
     """Interface for call graph profilers using different visualization strategies."""
@@ -72,6 +73,10 @@ class CallGraphProfiler(CallGraphProfilerI):
         self.visualizer.visualize(output_file=self.output_file)
         if os.path.exists(self.output_file):
             os.remove(self.output_file)
+            logger.info(
+                'Output file %s has been removed successfully.', 
+                self.output_file
+                )
         return call_graph_profiling_results.CallGraphProfilerResult(
             profiler=CallGraphProfiler,
             profiled_func=func,

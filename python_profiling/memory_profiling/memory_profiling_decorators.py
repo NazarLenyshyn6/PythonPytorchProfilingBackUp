@@ -9,7 +9,7 @@ from python_profiling import _base_profiling_decorators
 from python_profiling import python_profiling_configs
 from Internals import observers
 
-class PeakMemoryProfilerResultDecorator(_base_profiling_decorators.BaseProfilingDecorator):
+class PeakMemoryProfilerDecorator(_base_profiling_decorators.BaseProfilingDecorator):
     """Decorator for memory profiling with tracemalloc module.
     
     Profile peak memory allocation during function execution.

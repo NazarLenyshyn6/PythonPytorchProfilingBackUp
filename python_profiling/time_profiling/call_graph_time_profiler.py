@@ -26,7 +26,7 @@ class CallGraphTimeProfiler(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
     
     sort_key: Literal['time', 'cumulative', 'calls', 'name', 'file', 'line']  = pydantic.Field(default='cumulative')
-    func_filter: str= pydantic.Field(default=None)
+    func_filter: str | None = pydantic.Field(default=None)
     top_n : int =  pydantic.Field(default=10)
     
     def _profile_to_string(self, profile_file: str):

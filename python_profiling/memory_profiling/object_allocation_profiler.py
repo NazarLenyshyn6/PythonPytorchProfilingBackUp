@@ -17,6 +17,9 @@ from Internals import context_managers
 
 class ObjectAllocationProfiler:   
     """ Tracks live object graphs, memory growth over time, and type-specific memory usage with pympler module."""
+    
+    def __repr__(self):
+        return f'ObjectAllocationProfiler()'
      
     @classmethod
     @checks.ValidateType(('func', (BuiltinFunctionType, FunctionType)))

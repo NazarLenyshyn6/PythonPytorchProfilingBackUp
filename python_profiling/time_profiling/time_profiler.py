@@ -38,7 +38,7 @@ class TimeProfiler(TimeProfilerI):
         profiling_timer (Callable): Timer function used for profiling.
     """
     
-    def __init__(self, profiling_timer: Callable):
+    def __init__(self, profiling_timer: Callable = time.time):
         self.profilig_timer = profiling_timer
         
     @ValidateType(('func', (BuiltinFunctionType, FunctionType)))

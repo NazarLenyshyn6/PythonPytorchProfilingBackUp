@@ -6,7 +6,7 @@ import subprocess
 from typing_extensions import override
 
 from Internals import checks
-
+from Internals.logger import logger
 
 class CallGraphVisualizerI(ABC):
     """Interface for call graph visualizer."""
@@ -32,6 +32,7 @@ class Gprof2dotVisualizer(CallGraphVisualizerI):
         dot_file = output_file.replace('.prof', '.png')
         cmd = f"gprof2dot -f pstats {output_file} | dot -Tpng -o {dot_file}"
         subprocess.run(cmd, shell=True)
+        logger.info('Visualization done successfuly.')
     
 class SnakevizVisualizer(CallGraphVisualizerI):
     @staticmethod
@@ -39,3 +40,4 @@ class SnakevizVisualizer(CallGraphVisualizerI):
     @override
     def visualize(output_file):
         subprocess.run(f"snakeviz {output_file}", shell=True)
+        logger.info('Visualization done successfuly.')

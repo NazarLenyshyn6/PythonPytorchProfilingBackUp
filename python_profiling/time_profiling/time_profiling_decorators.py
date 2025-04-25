@@ -137,7 +137,7 @@ class TimeItProfilerDecorator(_base_profiling_decorators.BaseProfilingDecorator)
         timer: FunctionType | BuiltinFunctionType = time.perf_counter,
         number: int = 10000,
         repeat: int = 1,
-        storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig,
+        storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig(),
         observer: observers.ProfilingObserverI = observers.ProfilingObserver
         ):
         self.time_profiler = timeit_profiler.TimeItProfiler(timer=timer,
@@ -162,7 +162,7 @@ class LineTimeProfilerDecorator(_base_profiling_decorators.BaseProfilingDecorato
     """
     def __init__(
         self, 
-        storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig, 
+        storages: python_profiling_configs.StorageConfig = python_profiling_configs.StorageConfig(), 
         observer: observers.ProfilingObserverI = observers.ProfilingObserver
         ):
         self._init_observer(storages=storages,observer=observer)

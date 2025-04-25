@@ -211,4 +211,5 @@ class ComposedProfilingConfig:
             f"ComposedProfilingConfig("
             f"time_profiler={self.time_profiler}, "
             f"memory_profiler={self.memory_profiler})"
+            f"call_graph_profiler={self.call_graph_profiler}"
         )
