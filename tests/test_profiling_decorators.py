@@ -118,7 +118,7 @@ INVALID_STRATEGY = 'invalid_strategy'
             time_profiling_results.TimeItProfilerResult
         ),
         (
-            memory_profiling_decorators.PeakMemoryProfilerResultDecorator,
+            memory_profiling_decorators.PeakMemoryProfilerDecorator,
             {
                 'nframes': 1,
                 'key_type': 'lineno',
